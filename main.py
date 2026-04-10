@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -33,3 +33,13 @@ def grade_board(data: BoardInput):
         grade, action = "JUNK", "Strip & move on"
 
     return {"score": score, "grade": grade, "action": action}
+
+
+@app.post("/upload")
+async def upload_image(file: UploadFile = File(...)):
+    file_location = f"data/{file.filename}"
+
+    with open(file_location, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    return {"message": "Image saved"}
