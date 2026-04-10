@@ -292,10 +292,10 @@
     document.body.addEventListener("click", startRadarBeepLoop, { once: true });
     document.body.addEventListener("touchstart", startRadarBeepLoop, { once: true });
 
-    setTimeout(() => {
-      document.getElementById("splashScreen").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-    }, 6000);
+  setTimeout(() => {
+  document.getElementById("splashScreen").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+}, 10000);
 
     async function uploadImage() {
       const file = document.getElementById('imageInput').files[0];
