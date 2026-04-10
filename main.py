@@ -42,4 +42,10 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    return {"message": "Image saved"}
+    # TEMP fake result (until AI is added)
+    return {
+        "grade": "PENDING",
+        "message": "Image saved - ready for analysis"
+    }
+
+    
