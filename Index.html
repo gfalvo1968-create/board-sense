@@ -1,74 +1,340 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BoardSense</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: #39ff14;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .splash-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      width: 100vw;
+      background: radial-gradient(circle at center, #001a00 0%, #000000 70%);
+      position: relative;
+    }
+
+    .radar-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+    }
+
+    .radar-circle {
+      width: 100%;
+      height: 100%;
+      border: 3px solid #39ff14;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #39ff14;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radar-ring {
+      position: absolute;
+      border: 1px solid rgba(57, 255, 20, 0.4);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .ring1 { width: 80px; height: 80px; }
+    .ring2 { width: 160px; height: 160px; }
+    .ring3 { width: 240px; height: 240px; }
+
+    .crosshair-horizontal,
+    .crosshair-vertical {
+      position: absolute;
+      background: rgba(57, 255, 20, 0.35);
+    }
+
+    .crosshair-horizontal {
+      width: 100%;
+      height: 1px;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+
+    .crosshair-vertical {
+      width: 1px;
+      height: 100%;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .sweep {
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      background: linear-gradient(to right, rgba(57,255,20,0), #39ff14);
+      top: 50%;
+      left: 50%;
+      transform-origin: left center;
+      animation: spin 2s linear infinite;
+      box-shadow: 0 0 12px #39ff14;
+    }
+
+    .sweep-glow {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 0;
+      left: 50%;
+      transform-origin: bottom left;
+      background: conic-gradient(
+        from 0deg,
+        rgba(57,255,20,0.0) 0deg,
+        rgba(57,255,20,0.05) 20deg,
+        rgba(57,255,20,0.18) 45deg,
+        rgba(57,255,20,0.0) 65deg
+      );
+      animation: spin 2s linear infinite;
+      pointer-events: none;
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #39ff14;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px #39ff14;
+      z-index: 3;
+    }
+
+    .program-name {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 30px;
+      font-weight: bold;
+      color: #39ff14;
+      text-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
+      animation: pulseText 2s ease-in-out infinite;
+      z-index: 4;
+      letter-spacing: 1px;
+    }
+
+    .scan-text {
+      position: absolute;
+      bottom: -45px;
+      width: 100%;
+      text-align: center;
+      color: #39ff14;
+      font-size: 16px;
+      text-shadow: 0 0 8px #39ff14;
+      letter-spacing: 2px;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes pulseText {
+      0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.22);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.9;
+      }
+    }
+
+    .dashboard {
+      display: none;
+      min-height: 100vh;
+      background: black;
+      color: #39ff14;
+      padding: 20px;
+    }
+
+    .panel {
+      border: 2px solid #39ff14;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 0 12px rgba(57,255,20,0.45);
+      margin-bottom: 20px;
+      background: rgba(0, 25, 0, 0.4);
+    }
+
+    .panel h2, .panel h3 {
+      margin-top: 0;
+      text-shadow: 0 0 10px #39ff14;
+    }
+
+    button {
+      background: black;
+      color: #39ff14;
+      border: 2px solid #39ff14;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 16px;
+      box-shadow: 0 0 10px rgba(57,255,20,0.4);
+      margin: 6px 6px 6px 0;
+    }
+
+    input[type="checkbox"] {
+      transform: scale(1.2);
+      margin-right: 8px;
+      accent-color: #39ff14;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: #7dff6b;
+      text-shadow: 0 0 8px #39ff14;
+    }
+  </style>
+</head>
 <body>
-<h2>BoardSense</h2>
 
-<h2>BoardSense</h2>
+  <div class="splash-screen" id="splashScreen">
+    <div class="radar-container">
+      <div class="radar-circle">
+        <div class="radar-ring ring1"></div>
+        <div class="radar-ring ring2"></div>
+        <div class="radar-ring ring3"></div>
+        <div class="crosshair-horizontal"></div>
+        <div class="crosshair-vertical"></div>
+        <div class="sweep-glow"></div>
+        <div class="sweep"></div>
+        <div class="center-dot"></div>
+        <div class="program-name">BoardSense</div>
+      </div>
+      <div class="scan-text">SCANNING...</div>
+    </div>
+  </div>
 
-<h3>Scan Board</h3>
+  <div class="dashboard" id="dashboard">
+    <div class="panel">
+      <h2>BoardSense Dashboard</h2>
+      <p>Neon core online.</p>
+    </div>
 
-<input type="file" accept="image/*" capture="environment" id="imageInput">
-<br><br>
-<button onclick="uploadImage()">📸 Scan Board</button>
+    <div class="panel">
+      <h3>Scan Board</h3>
+      <input type="file" accept="image/*" capture="environment" id="imageInput" style="display:none">
+      <button onclick="document.getElementById('imageInput').click()">📸 Take Picture</button>
+      <button onclick="uploadImage()">Upload Scan</button>
+      <p class="status" id="uploadStatus"></p>
+    </div>
 
-<hr>
+    <div class="panel">
+      <h3>Manual Grading</h3>
+      <label><input type="checkbox" id="gf"> Gold Fingers</label><br>
+      <label><input type="checkbox" id="dc"> Dense Chips</label><br>
+      <label><input type="checkbox" id="ic"> Industrial Connectors</label><br>
+      <label><input type="checkbox" id="pb"> Power Board</label><br>
+      <label><input type="checkbox" id="hv"> Heavy</label><br><br>
+      <button onclick="send()">Analyze</button>
+      <p class="status" id="result"></p>
+    </div>
+  </div>
 
-<label><input type="checkbox" id="gf"> Gold Fingers</label><br>
-<label><input type="checkbox" id="dc"> Dense Chips</label><br>
-<label><input type="checkbox" id="ic"> Industrial Connectors</label><br>
-<label><input type="checkbox" id="pb"> Power Board</label><br>
-<label><input type="checkbox" id="hv"> Heavy</label><br>
-  
-<label><input type="checkbox" id="gf"> Gold Fingers</label><br>
-<label><input type="checkbox" id="dc"> Dense Chips</label><br>
-<label><input type="checkbox" id="ic"> Industrial Connectors</label><br>
-<label><input type="checkbox" id="pb"> Power Board</label><br>
-<label><input type="checkbox" id="hv"> Heavy</label><br>
+  <script>
+    let audioStarted = false;
 
-<button onclick="send()">Analyze</button>
+    function startRadarBeepLoop() {
+      if (audioStarted) return;
+      audioStarted = true;
 
-<p id="result"></p>
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      const audioCtx = new AudioContextClass();
 
-<script>
-async function send() {
-  const res = await fetch("/grade", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      gold_fingers: gf.checked,
-      dense_chips: dc.checked,
-      industrial_connectors: ic.checked,
-      power_board: pb.checked,
-      heavy: hv.checked
-<script>
-async function uploadImage() {
-  const file = document.getElementById('imageInput').files[0];
+      function beep() {
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
 
-  if (!file) {
-    alert("Take a picture first");
-    return;
-  }
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
 
-  const formData = new FormData();
-  formData.append("file", file);
+        gainNode.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.01);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
 
-  const res = await fetch("/upload", {
-    method: "POST",
-    body: formData
-  });
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
 
-  const data = await res.json();
-  alert(`Saved. Status: ${data.grade}`);
-}
-</script>
-    
-    })
-  });
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + 0.18);
+      }
 
-  const data = await res.json();
-  result.innerText =
-    `Grade: ${data.grade} | Score: ${data.score} | Action: ${data.action}`;
-}
-</script>
+      beep();
+      setInterval(beep, 2000);
+    }
+
+    document.body.addEventListener("click", startRadarBeepLoop, { once: true });
+    document.body.addEventListener("touchstart", startRadarBeepLoop, { once: true });
+
+    setTimeout(() => {
+      document.getElementById("splashScreen").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+    }, 6000);
+
+    async function uploadImage() {
+      const file = document.getElementById('imageInput').files[0];
+
+      if (!file) {
+        alert("Take a picture first");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+      document.getElementById("uploadStatus").innerText =
+        `Saved image: ${data.filename || "uploaded"}`;
+    }
+
+    async function send() {
+      const res = await fetch("/grade", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          gold_fingers: gf.checked,
+          dense_chips: dc.checked,
+          industrial_connectors: ic.checked,
+          power_board: pb.checked,
+          heavy: hv.checked
+        })
+      });
+
+      const data = await res.json();
+      result.innerText =
+        `Grade: ${data.grade} | Score: ${data.score} | Action: ${data.action}`;
+    }
+  </script>
 </body>
 </html>
