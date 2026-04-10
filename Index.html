@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>BoardSense</h2>
+
+<label><input type="checkbox" id="gf"> Gold Fingers</label><br>
+<label><input type="checkbox" id="dc"> Dense Chips</label><br>
+<label><input type="checkbox" id="ic"> Industrial Connectors</label><br>
+<label><input type="checkbox" id="pb"> Power Board</label><br>
+<label><input type="checkbox" id="hv"> Heavy</label><br>
+
+<button onclick="send()">Analyze</button>
+
+<p id="result"></p>
+
+<script>
+async function send() {
+  const res = await fetch("/grade", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      gold_fingers: gf.checked,
+      dense_chips: dc.checked,
+      industrial_connectors: ic.checked,
+      power_board: pb.checked,
+      heavy: hv.checked
+    })
+  });
+
+  const data = await res.json();
+  result.innerText =
+    `Grade: ${data.grade} | Score: ${data.score} | Action: ${data.action}`;
+}
+</script>
+</body>
+</html>
