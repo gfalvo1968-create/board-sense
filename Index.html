@@ -58,7 +58,7 @@ async function uploadImage() {
   });
 
   const data = await res.json();
-  alert("Board scanned and saved");
+  alert(`Saved. Status: ${data.grade}`);
 }
 </script>
     
