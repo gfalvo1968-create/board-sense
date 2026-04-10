@@ -1,5 +1,9 @@
 from fastapi import FastAPI, UploadFile, File
 from pydantic import BaseModel
+import shutil
+import os
+import csv
+from datetime import datetime
 
 app = FastAPI()
 
@@ -9,7 +13,9 @@ class BoardInput(BaseModel):
     industrial_connectors: bool
     power_board: bool
     heavy: bool
-
+class LabelInput(BaseModel):
+    filename: str
+    label: str
 @app.get("/")
 def home():
     return {"message": "BoardSense is running"}
@@ -34,18 +40,40 @@ def grade_board(data: BoardInput):
 
     return {"score": score, "grade": grade, "action": action}
 
-
 @app.post("/upload")
 async def upload_image(file: UploadFile = File(...)):
-    file_location = f"data/{file.filename}"
+    os.makedirs("data", exist_ok=True)
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_name = file.filename.replace(" ", "_")
+    filename = f"{timestamp}_{safe_name}"
+    file_location = f"data/{filename}"
 
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # TEMP fake result (until AI is added)
     return {
-        "grade": "PENDING",
-        "message": "Image saved - ready for analysis"
+        "message": "Image saved",
+        "filename": filename
+   @app.post("/label")
+def save_label(data: LabelInput):
+    os.makedirs("db", exist_ok=True)
+    csv_file = "db/labels.csv"
+    file_exists = os.path.isfile(csv_file)
+
+    with open(csv_file, "a", newline="") as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["filename", "label", "timestamp"])
+        writer.writerow([
+            data.filename,
+            data.label,
+            datetime.now().isoformat()
+        ])
+
+    return {"message": f"Label '{data.label}' saved for {data.filename}"}
+    
     }
+    
 
     
