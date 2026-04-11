@@ -23,7 +23,42 @@
     box-shadow: 0 0 25px #39ff14, 0 0 40px #39ff14;
   }
 
-  .splash-screen {
+  .label-section {
+  margin-top: 16px;
+}
+
+.label-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.label-buttons button {
+  min-width: 110px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 2px solid #39ff14;
+  border-radius: 999px;
+  box-shadow: 0 0 10px rgba(57,255,20,0.35);
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.preview-card {
+  margin-top: 14px;
+  padding: 12px;
+  border: 2px solid #39ff14;
+  border-radius: 14px;
+  box-shadow: 0 0 12px rgba(57,255,20,0.25);
+  background: rgba(0, 20, 0, 0.45);
+}
+    
+    
+    .splash-screen {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -253,15 +288,27 @@
       <button onclick="document.getElementById('imageInput').click()">📸 Take Picture</button>
       <button onclick="uploadImage()">Upload Scan</button>
       <p class="status" id="uploadStatus"></p>
-
-<img id="preview" style="
-  width:100%;
-  max-width:300px;
-  margin-top:10px;
-  border:2px solid #39ff14;
-  border-radius:10px;
-  display:none;
-">
+   <div class="label-section">
+  <h3>Label This Board</h3>
+  <div class="label-buttons">
+    <button onclick="saveLabel('HIGH')">HIGH</button>
+    <button onclick="saveLabel('MEDIUM')">MEDIUM</button>
+    <button onclick="saveLabel('LOW')">LOW</button>
+    <button onclick="saveLabel('JUNK')">JUNK</button>
+  </div>
+  <p class="status" id="labelStatus"></p>
+</div>
+      
+    <div class="preview-card">
+  <img id="preview" style="
+    width:100%;
+    max-width:320px;
+    margin-top:10px;
+    border:2px solid #39ff14;
+    border-radius:10px;
+    display:none;
+  ">
+</div>
     </div>
 
     <div class="panel">
@@ -278,7 +325,7 @@
 
   <script>
     let audioStarted = false;
-
+    let lastUploadedFilename = "";
     function startRadarBeepLoop() {
       if (audioStarted) return;
       audioStarted = true;
@@ -316,7 +363,7 @@
   document.getElementById("dashboard").style.display = "block";
 }
 
-    async function uploadImage() {
+  async function uploadImage() {
   const file = document.getElementById("imageInput").files[0];
 
   if (!file) {
@@ -324,6 +371,56 @@
     return;
   }
 
+  const preview = document.getElementById("preview");
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+  preview.classList.add("scanning");
+
+  document.getElementById("uploadStatus").innerText = "SCANNING...";
+  document.getElementById("labelStatus").innerText = "";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  preview.classList.remove("scanning");
+
+  lastUploadedFilename = data.filename || "";
+  document.getElementById("uploadStatus").innerText =
+    `Saved: ${data.filename || "uploaded"}`;
+
+  if (data.ai_grade) {
+    document.getElementById("result").innerText =
+      `AI Grade: ${data.ai_grade} | Confidence: ${data.confidence || "N/A"} | Action: ${data.action || "Review manually"}`;
+  }
+}
+
+    async function saveLabel(label) {
+  if (!lastUploadedFilename) {
+    alert("Scan a board first");
+    return;
+  }
+
+  const res = await fetch("/label", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      filename: lastUploadedFilename,
+      label: label
+    })
+  });
+
+  const data = await res.json();
+  document.getElementById("labelStatus").innerText = data.message;
+}
   const preview = document.getElementById("preview");
 
   // show image
