@@ -324,6 +324,34 @@
     return;
   }
 
+  const preview = document.getElementById("preview");
+
+  // show image
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+
+  // 🔥 START glow
+  preview.classList.add("scanning");
+
+  document.getElementById("uploadStatus").innerText = "SCANNING...";
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  // 🧊 STOP glow
+  preview.classList.remove("scanning");
+
+  document.getElementById("uploadStatus").innerText =
+    `Saved: ${data.filename || "uploaded"}`;
+}
+
   // 🟢 Show preview instantly
   const preview = document.getElementById("preview");
   preview.src = URL.createObjectURL(file);
