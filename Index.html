@@ -243,6 +243,15 @@
       <button onclick="document.getElementById('imageInput').click()">📸 Take Picture</button>
       <button onclick="uploadImage()">Upload Scan</button>
       <p class="status" id="uploadStatus"></p>
+
+<img id="preview" style="
+  width:100%;
+  max-width:300px;
+  margin-top:10px;
+  border:2px solid #39ff14;
+  border-radius:10px;
+  display:none;
+">
     </div>
 
     <div class="panel">
@@ -292,10 +301,10 @@
     document.body.addEventListener("click", startRadarBeepLoop, { once: true });
     document.body.addEventListener("touchstart", startRadarBeepLoop, { once: true });
 
-  setTimeout(() => {
+  function enterDashboard() {
   document.getElementById("splashScreen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
-}, 10000);
+}
 
     async function uploadImage() {
       const file = document.getElementById('imageInput').files[0];
