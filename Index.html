@@ -307,25 +307,34 @@
 }
 
     async function uploadImage() {
-      const file = document.getElementById('imageInput').files[0];
+  const file = document.getElementById("imageInput").files[0];
 
-      if (!file) {
-        alert("Take a picture first");
-        return;
-      }
+  if (!file) {
+    alert("Take a picture first");
+    return;
+  }
 
-      const formData = new FormData();
-      formData.append("file", file);
+  // 🟢 Show preview instantly
+  const preview = document.getElementById("preview");
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
 
-      const res = await fetch("/upload", {
-        method: "POST",
-        body: formData
-      });
+  // 🟢 Show scanning status
+  document.getElementById("uploadStatus").innerText = "SCANNING...";
 
-      const data = await res.json();
-      document.getElementById("uploadStatus").innerText =
-        `Saved image: ${data.filename || "uploaded"}`;
-    }
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch("/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  document.getElementById("uploadStatus").innerText =
+    `Saved: ${data.filename || "uploaded"}`;
+}
 
     async function send() {
       const res = await fetch("/grade", {
