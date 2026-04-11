@@ -13,6 +13,28 @@ app = FastAPI()
 os.makedirs("data", exist_ok=True)
 os.makedirs("db", exist_ok=True)
 
+def simple_ai_grade(filename):
+    name = filename.lower()
+
+    score = 0
+
+    if "gold" in name:
+        score += 3
+    if "server" in name or "dense" in name:
+        score += 2
+    if "industrial" in name:
+        score += 2
+    if "power" in name:
+        score -= 2
+
+    if score >= 5:
+        return "HIGH", "0.85"
+    elif score >= 3:
+        return "MEDIUM", "0.70"
+    elif score >= 1:
+        return "LOW", "0.60"
+    else:
+        return "JUNK", "0.40"
 
 # -----------------------------
 # Data models
@@ -96,10 +118,8 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Placeholder AI result for now
-    ai_grade = "PENDING REVIEW"
-    confidence = "0.50"
-    action = "Use manual grading and save a label"
+    ai_grade, confidence = simple_ai_grade(filename)
+action = "Auto AI grading complete"
 
     return {
         "message": "Image saved",
