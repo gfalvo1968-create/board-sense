@@ -461,6 +461,12 @@
         <div class="counter-card">READY: <span id="countReady">NO</span></div>
       </div>
     </div>
+  <div class="panel">
+  <h3>AI Training</h3>
+  <button onclick="trainModel()">Train Model</button>
+  <p class="status" id="trainStatus">Model idle</p>
+</div>
+  
   </div>
 <div class="panel">
   <h3>AI Training</h3>
@@ -641,7 +647,28 @@
           box.innerHTML = "No scans yet";
           return;
         }
+        async function trainModel() {
+  const status = document.getElementById("trainStatus");
+  status.innerText = "Training started...";
 
+  try {
+    const res = await fetch("/train-model", {
+      method: "POST"
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      status.innerText = `${data.message}: ${data.error}`;
+    } else {
+      status.innerText = data.message || "Training finished";
+    }
+
+    loadTrainingStatus();
+  } catch (err) {
+    status.innerText = `Training failed: ${err}`;
+  }
+}
         box.innerHTML = data.history.map(item => `
           <div class="history-item">
             <div class="history-filename">${item.filename}</div>
