@@ -2,45 +2,46 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from datetime import datetimefrom model.classifier import predict_board_grade
-
-import os
+from datetime import datetime
 import shutil
+import os
 import csv
+from collections import Counter
 
 app = FastAPI()
 
-# Make sure folders exist
+# =========================
+# Setup
+# =========================
 os.makedirs("data", exist_ok=True)
 os.makedirs("db", exist_ok=True)
+os.makedirs("model", exist_ok=True)
 
-def simple_ai_grade(filename):
-    name = filename.lower()
+app.mount("/data", StaticFiles(directory="data"), name="data")
 
-    score = 0
 
-    if "gold" in name:
-        score += 3
-    if "server" in name or "dense" in name:
-        score += 2
-    if "industrial" in name:
-        score += 2
-    if "power" in name:
-        score -= 2
+# =========================
+# Optional AI import
+# =========================
+AI_AVAILABLE = True
+AI_IMPORT_ERROR = ""
 
-    if score >= 5:
-        return "HIGH", "0.85"
-    elif score >= 3:
-        return "MEDIUM", "0.70"
-    elif score >= 1:
-        return "LOW", "0.60"
-    else:
-        return "JUNK", "0.40"
+try:
+    from model.classifier import predict_board_grade
+except Exception as e:
+    AI_AVAILABLE = False
+    AI_IMPORT_ERROR = str(e)
 
-# -----------------------------
+
+# =========================
 # Data models
-# -----------------------------
-class BoardInput(BaseModel):
+# =========================
+class LabelInput(BaseModel):
+    filename: str
+    label: str
+
+
+class ManualGradeInput(BaseModel):
     gold_fingers: bool
     dense_chips: bool
     industrial_connectors: bool
@@ -48,31 +49,18 @@ class BoardInput(BaseModel):
     heavy: bool
 
 
-class LabelInput(BaseModel):
-    filename: str
-    label: str
+# =========================
+# Helpers
+# =========================
+def labels_csv_path():
+    return os.path.join("db", "labels.csv")
 
 
-# -----------------------------
-# Serve uploaded images
-# -----------------------------
-app.mount("/data", StaticFiles(directory="data"), name="data")
+def scans_csv_path():
+    return os.path.join("db", "scans.csv")
 
 
-# -----------------------------
-# Home page
-# -----------------------------
-@app.get("/", response_class=HTMLResponse)
-def home():
-    with open("index.html", "r", encoding="utf-8") as file:
-        return file.read()
-
-
-# -----------------------------
-# Manual grading route
-# -----------------------------
-@app.post("/grade")
-def grade_board(data: BoardInput):
+def simple_manual_grade(data: ManualGradeInput):
     score = 0
 
     if data.gold_fingers:
@@ -88,7 +76,7 @@ def grade_board(data: BoardInput):
 
     if score >= 5:
         grade = "HIGH"
-        action = "Sell as high-grade board or check resale before scrapping"
+        action = "Sell as high-grade board or check resale first"
     elif score >= 3:
         grade = "MEDIUM"
         action = "Batch sell or strip valuable parts"
@@ -99,16 +87,79 @@ def grade_board(data: BoardInput):
         grade = "JUNK"
         action = "Strip what you can and move on"
 
-    return {
-        "score": score,
-        "grade": grade,
-        "action": action
-    }
+    return score, grade, action
 
 
-# -----------------------------
-# Upload image route
-# -----------------------------
+def append_scan_history(filename: str, ai_grade: str, confidence):
+    path = scans_csv_path()
+    file_exists = os.path.isfile(path)
+
+    with open(path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["filename", "ai_grade", "confidence", "timestamp"])
+        writer.writerow([
+            filename,
+            ai_grade,
+            confidence,
+            datetime.now().isoformat()
+        ])
+
+
+def append_label(filename: str, label: str):
+    path = labels_csv_path()
+    file_exists = os.path.isfile(path)
+
+    with open(path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if not file_exists:
+            writer.writerow(["filename", "label", "timestamp"])
+        writer.writerow([
+            filename,
+            label,
+            datetime.now().isoformat()
+        ])
+
+
+def read_recent_scans(limit=10):
+    path = scans_csv_path()
+    if not os.path.isfile(path):
+        return []
+
+    with open(path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    rows.reverse()
+    return rows[:limit]
+
+
+def read_label_counts():
+    path = labels_csv_path()
+    counts = Counter({"HIGH": 0, "MEDIUM": 0, "LOW": 0, "JUNK": 0})
+
+    if not os.path.isfile(path):
+        return counts
+
+    with open(path, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            label = row.get("label", "").strip().upper()
+            if label in counts:
+                counts[label] += 1
+
+    return counts
+
+
+# =========================
+# Routes
+# =========================
+@app.get("/", response_class=HTMLResponse)
+def home():
+    with open("index.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+
 @app.post("/upload")
 async def upload_image(file: UploadFile = File(...)):
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -119,32 +170,21 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    # AI prediction
     try:
-    ai_grade, confidence = predict_board_grade(file_location)
+        if not AI_AVAILABLE:
+            raise RuntimeError(f"classifier not ready: {AI_IMPORT_ERROR}")
 
-    scans_file = os.path.join("db", "scans.csv")
-    file_exists = os.path.isfile(scans_file)
+        ai_grade, confidence = predict_board_grade(file_location)
+        confidence = str(confidence)
+        action = "AI image grading complete"
 
-    with open(scans_file, "a", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
+    except Exception as e:
+        ai_grade = "PENDING REVIEW"
+        confidence = "0.00"
+        action = f"AI not ready: {str(e)}"
 
-        if not file_exists:
-            writer.writerow(["filename", "ai_grade", "confidence", "timestamp"])
-
-        writer.writerow([
-            filename,
-            ai_grade,
-            confidence,
-            datetime.now().isoformat()
-        ])
-
-    confidence = str(confidence)
-    action = "AI image grading complete"
-
-except Exception as e:
-    ai_grade = "PENDING REVIEW"
-    confidence = "0.00"
-    action = f"AI not ready: {str(e)}"
+    append_scan_history(filename, ai_grade, confidence)
 
     return {
         "message": "Image saved",
@@ -156,43 +196,40 @@ except Exception as e:
     }
 
 
-# -----------------------------
-# Save label route
-# -----------------------------
 @app.post("/label")
 def save_label(data: LabelInput):
-    csv_file = os.path.join("db", "labels.csv")
-    file_exists = os.path.isfile(csv_file)
-
-    with open(csv_file, "a", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-
-        if not file_exists:
-            writer.writerow(["filename", "label", "timestamp"])
-
-        writer.writerow([
-            data.filename,
-            data.label,
-            datetime.now().isoformat()
-        ])
+    append_label(data.filename, data.label.upper())
 
     return {
-        "message": f"Saved label {data.label} for {data.filename}"
+        "message": f"Saved label {data.label.upper()} for {data.filename}"
     }
 
-    @app.get("/history")
+
+@app.post("/grade")
+def grade_manual(data: ManualGradeInput):
+    score, grade, action = simple_manual_grade(data)
+    return {
+        "score": score,
+        "grade": grade,
+        "action": action
+    }
+
+
+@app.get("/history")
 def get_history():
-    scans_file = os.path.join("db", "scans.csv")
+    return {"history": read_recent_scans(10)}
 
-    if not os.path.isfile(scans_file):
-        return {"history": []}
 
-    history = []
-    with open(scans_file, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            history.append(row)
+@app.get("/training-status")
+def training_status():
+    counts = read_label_counts()
+    total = sum(counts.values())
 
-    history = list(reversed(history))[:10]
-
-    return {"history": history}
+    return {
+        "HIGH": counts["HIGH"],
+        "MEDIUM": counts["MEDIUM"],
+        "LOW": counts["LOW"],
+        "JUNK": counts["JUNK"],
+        "TOTAL": total,
+        "READY": total >= 5
+    }
