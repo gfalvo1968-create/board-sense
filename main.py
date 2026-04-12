@@ -2,7 +2,8 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetimefrom model.classifier import predict_board_grade
+
 import os
 import shutil
 import csv
@@ -118,7 +119,14 @@ async def upload_image(file: UploadFile = File(...)):
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    ai_grade, confidence = simple_ai_grade(filename)
+    try:
+    ai_grade, confidence = predict_board_grade(file_location)
+    confidence = str(confidence)
+    action = "AI image grading complete"
+except Exception as e:
+    ai_grade = "PENDING REVIEW"
+    confidence = "0.00"
+    action = f"AI not ready: {str(e)}"
 action = "Auto AI grading complete"
 
     return {
