@@ -265,11 +265,11 @@ def train_model_route():
         )
         return {
             "message": "Training completed successfully",
-            "output": result.stdout[-500:]
+            "output": (result.stdout or "").strip()[-2000:]
         }
     except subprocess.CalledProcessError as e:
         return {
             "message": "Training failed",
-            "output": e.stdout[-500:] if e.stdout else "",
-            "error": e.stderr[-500:] if e.stderr else ""
+            "output": (e.stdout or "").strip()[-2000:],
+            "error": (e.stderr or "").strip()[-2000:]
         }
