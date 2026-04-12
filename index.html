@@ -366,7 +366,10 @@
 
       <div class="file-row">
         <button onclick="document.getElementById('imageInput').click()">📸 Take Picture</button>
-        <button onclick="uploadImage()">Upload Scan</button>
+        <input type="file" id="imageInput" accept="image/*" hidden>
+        <button onclick="document.getElementById('imageInput').click()">
+         Upload Scan
+        </button>
       </div>
 
       <p class="status" id="uploadStatus"></p>
@@ -467,6 +470,10 @@
       if (!file) {
         alert("Take a picture first");
         return;
+      document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("imageInput").addEventListener("change", uploadImage);
+     });
+      
       }
 
       const preview = document.getElementById("preview");
