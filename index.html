@@ -472,6 +472,7 @@
   <h3>AI Training</h3>
   <button onclick="trainModel()">Train Model</button>
   <p class="status" id="trainStatus">Model idle</p>
+  <div id="trainOutput" class="result-box">No training output yet</div>
 </div>
   <script>
     let audioStarted = false;
@@ -600,7 +601,10 @@
     }
     async function trainModel() {
   const status = document.getElementById("trainStatus");
+  const output = document.getElementById("trainOutput");
+
   status.innerText = "Training started...";
+  output.innerText = "Running train_model.py ...";
 
   try {
     const res = await fetch("/train-model", {
@@ -608,10 +612,20 @@
     });
 
     const data = await res.json();
-    status.innerText = data.message || "Training finished";
+
+    if (data.error) {
+      status.innerText = `${data.message}`;
+      output.innerText =
+        `${data.output || ""}\n${data.error || ""}`.trim() || "Training failed with no extra output";
+    } else {
+      status.innerText = data.message || "Training finished";
+      output.innerText = data.output || "Training completed with no console output";
+    }
+
     loadTrainingStatus();
   } catch (err) {
-    status.innerText = `Training failed: ${err}`;
+    status.innerText = "Training failed";
+    output.innerText = `Request error: ${err}`;
   }
 }
     async function sendManualGrade() {
