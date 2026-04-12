@@ -121,13 +121,30 @@ async def upload_image(file: UploadFile = File(...)):
 
     try:
     ai_grade, confidence = predict_board_grade(file_location)
+
+    scans_file = os.path.join("db", "scans.csv")
+    file_exists = os.path.isfile(scans_file)
+
+    with open(scans_file, "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+
+        if not file_exists:
+            writer.writerow(["filename", "ai_grade", "confidence", "timestamp"])
+
+        writer.writerow([
+            filename,
+            ai_grade,
+            confidence,
+            datetime.now().isoformat()
+        ])
+
     confidence = str(confidence)
     action = "AI image grading complete"
+
 except Exception as e:
     ai_grade = "PENDING REVIEW"
     confidence = "0.00"
     action = f"AI not ready: {str(e)}"
-action = "Auto AI grading complete"
 
     return {
         "message": "Image saved",
