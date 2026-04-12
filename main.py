@@ -163,4 +163,19 @@ def save_label(data: LabelInput):
         "message": f"Saved label {data.label} for {data.filename}"
     }
 
-    
+    @app.get("/history")
+def get_history():
+    scans_file = os.path.join("db", "scans.csv")
+
+    if not os.path.isfile(scans_file):
+        return {"history": []}
+
+    history = []
+    with open(scans_file, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            history.append(row)
+
+    history = list(reversed(history))[:10]
+
+    return {"history": history}
