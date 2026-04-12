@@ -462,7 +462,11 @@
       </div>
     </div>
   </div>
-
+<div class="panel">
+  <h3>AI Training</h3>
+  <button onclick="trainModel()">Train Model</button>
+  <p class="status" id="trainStatus">Model idle</p>
+</div>
   <script>
     let audioStarted = false;
     let lastUploadedFilename = "";
@@ -588,7 +592,22 @@
         document.getElementById("labelStatus").innerText = `Label save failed: ${err}`;
       }
     }
+    async function trainModel() {
+  const status = document.getElementById("trainStatus");
+  status.innerText = "Training started...";
 
+  try {
+    const res = await fetch("/train-model", {
+      method: "POST"
+    });
+
+    const data = await res.json();
+    status.innerText = data.message || "Training finished";
+    loadTrainingStatus();
+  } catch (err) {
+    status.innerText = `Training failed: ${err}`;
+  }
+}
     async function sendManualGrade() {
       try {
         const res = await fetch("/grade", {
