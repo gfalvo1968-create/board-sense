@@ -6,6 +6,7 @@ from datetime import datetime
 import shutil
 import os
 import csv
+import subprocess
 from collections import Counter
 
 app = FastAPI()
@@ -253,3 +254,22 @@ def training_status():
         "TOTAL": total,
         "READY": total >= 5
     }
+@app.post("/train-model")
+def train_model_route():
+    try:
+        result = subprocess.run(
+            ["python", "train_model.py"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        return {
+            "message": "Training completed successfully",
+            "output": result.stdout[-500:]
+        }
+    except subprocess.CalledProcessError as e:
+        return {
+            "message": "Training failed",
+            "output": e.stdout[-500:] if e.stdout else "",
+            "error": e.stderr[-500:] if e.stderr else ""
+        }
