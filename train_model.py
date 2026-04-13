@@ -3,13 +3,16 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
-from model.classifier import predict_board_grade
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+LABELS_FILE = os.path.join(BASE_DIR, "db", "labels.csv")
+MODEL_OUT = os.path.join(BASE_DIR, "model", "boardsense_model.h5")
 
 IMG_SIZE = (128, 128)
 BATCH_SIZE = 16
-DATA_DIR = "data"
-LABELS_FILE = "db/labels.csv"
-MODEL_OUT = "model/boardsense_model.h5"
+
+if not os.path.exists(LABELS_FILE):
 
 if not os.path.exists(LABELS_FILE):
     print("labels.csv not found, creating empty dataset")
