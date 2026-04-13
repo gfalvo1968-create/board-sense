@@ -11,7 +11,11 @@ DATA_DIR = "data"
 LABELS_FILE = "db/labels.csv"
 MODEL_OUT = "model/boardsense_model.h5"
 
-label_df = pd.read_csv(LABELS_FILE)
+if not os.path.exists(LABELS_FILE):
+    print("labels.csv not found, creating empty dataset")
+    label_df = pd.DataFrame(columns=["filename", "label"])
+else:
+    label_df = pd.read_csv(LABELS_FILE)
 
 # keep only rows where image file actually exists
 label_df["filepath"] = label_df["filename"].apply(lambda x: os.path.join(DATA_DIR, x))
