@@ -13,15 +13,13 @@ IMG_SIZE = (128, 128)
 BATCH_SIZE = 16
 
 if not os.path.exists(LABELS_FILE):
-
-if not os.path.exists(LABELS_FILE):
     print("labels.csv not found, creating empty dataset")
     label_df = pd.DataFrame(columns=["filename", "label"])
 else:
     label_df = pd.read_csv(LABELS_FILE)
 
 # keep only rows where image file actually exists
-label_df["filepath"] = label_df["filename"].apply(lambda x: os.path.join(DATA_DIR, x))
+label_df["filepath"] = label_df["filename"].apply(lambda x: os.path.join(DATA_DIR, "images", x))
 label_df = label_df[label_df["filepath"].apply(os.path.exists)]
 
 class_names = sorted(label_df["label"].unique().tolist())
