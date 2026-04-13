@@ -200,6 +200,7 @@
       font-size: 16px;
       font-weight: bold;
       box-shadow: 0 0 10px rgba(57,255,20,0.28);
+      cursor: pointer;
     }
 
     button:active {
@@ -343,6 +344,12 @@
       background: rgba(0, 12, 0, 0.4);
     }
 
+    #trainOutput {
+      white-space: pre-wrap;
+      text-align: left;
+      font-size: 14px;
+    }
+
     @keyframes spin {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
@@ -460,27 +467,21 @@
         <div class="counter-card">TOTAL: <span id="countTotal">0</span></div>
         <div class="counter-card">READY: <span id="countReady">NO</span></div>
       </div>
-    <div class="panel">
-  <h3>Last AI Prediction</h3>
-  <div id="lastPredictionBox" class="result-box">
-    No prediction yet
-  </div>
-</div>
-    
     </div>
-  <div class="panel">
-  <h3>AI Training</h3>
-  <button onclick="trainModel()">Train Model</button>
-  <p class="status" id="trainStatus">Model idle</p>
-</div>
-  
+
+    <div class="panel">
+      <h3>AI Training</h3>
+      <button onclick="trainModel()">Train Model</button>
+      <p class="status" id="trainStatus">Model idle</p>
+      <div id="trainOutput" class="result-box">No training output yet</div>
+    </div>
+
+    <div class="panel">
+      <h3>Last AI Prediction</h3>
+      <div id="lastPredictionBox" class="result-box">No prediction yet</div>
+    </div>
   </div>
-<div class="panel">
-  <h3>AI Training</h3>
-  <button onclick="trainModel()">Train Model</button>
-  <p class="status" id="trainStatus">Model idle</p>
-  <div id="trainOutput" class="result-box">No training output yet</div>
-</div>
+
   <script>
     let audioStarted = false;
     let lastUploadedFilename = "";
@@ -495,33 +496,6 @@
       const AudioContextClass = window.AudioContext || window.webkitAudioContext;
       const audioCtx = new AudioContextClass();
 
-      function renderLastPrediction() {
-  const box = document.getElementById("lastPredictionBox");
-
-  if (!lastPrediction) {
-    box.innerHTML = "No prediction yet";
-    return;
-  }
-
-      function renderLastPrediction() {
-  const box = document.getElementById("lastPredictionBox");
-
-  if (!lastPrediction) {
-    box.innerHTML = "No prediction yet";
-    return;
-  }
-
-  box.innerHTML = `
-    <div class="history-item">
-      <div class="history-filename">${lastPrediction.filename || "Unknown file"}</div>
-      <div class="history-meta">AI Grade: ${lastPrediction.ai_grade || "N/A"}</div>
-      <div class="history-meta">Confidence: ${lastPrediction.confidence || "N/A"}</div>
-      <div class="history-meta">Action: ${lastPrediction.action || "N/A"}</div>
-      <div class="history-meta">Saved Label: ${lastSavedLabel || "None yet"}</div>
-    </div>
-  `;
-}
-      
       function beep() {
         const oscillator = audioCtx.createOscillator();
         const gainNode = audioCtx.createGain();
@@ -561,6 +535,25 @@
       else if (g === "JUNK") badge.classList.add("junk");
     }
 
+    function renderLastPrediction() {
+      const box = document.getElementById("lastPredictionBox");
+
+      if (!lastPrediction) {
+        box.innerHTML = "No prediction yet";
+        return;
+      }
+
+      box.innerHTML = `
+        <div class="history-item">
+          <div class="history-filename">${lastPrediction.filename || "Unknown file"}</div>
+          <div class="history-meta">AI Grade: ${lastPrediction.ai_grade || "N/A"}</div>
+          <div class="history-meta">Confidence: ${lastPrediction.confidence || "N/A"}</div>
+          <div class="history-meta">Action: ${lastPrediction.action || "N/A"}</div>
+          <div class="history-meta">Saved Label: ${lastSavedLabel || "None yet"}</div>
+        </div>
+      `;
+    }
+
     async function uploadImage() {
       const file = document.getElementById("imageInput").files[0];
       const status = document.getElementById("uploadStatus");
@@ -596,17 +589,20 @@
         lastUploadedFilename = data.filename || "";
         status.innerText = `Saved: ${data.filename || "uploaded"}`;
         setBadge(data.ai_grade || "PENDING REVIEW");
-        lastPrediction = {
-        filename: data.filename || "",
-        ai_grade: data.ai_grade || "PENDING REVIEW",
-        confidence: data.confidence || "N/A",
-        action: data.action || "Review manually"
-   };
 
-lastSavedLabel = "";
-renderLastPrediction();
+        lastPrediction = {
+          filename: data.filename || "",
+          ai_grade: data.ai_grade || "PENDING REVIEW",
+          confidence: data.confidence || "N/A",
+          action: data.action || "Review manually"
+        };
+
+        lastSavedLabel = "";
+        renderLastPrediction();
+
         document.getElementById("result").innerText =
-        Confidence: ${data.confidence || "N/A"} | Action: ${data.action || "Review manually"}`;
+          `Confidence: ${data.confidence || "N/A"} | Action: ${data.action || "Review manually"}`;
+
         loadHistory();
       } catch (err) {
         status.innerText = `Upload failed: ${err}`;
@@ -638,40 +634,44 @@ renderLastPrediction();
         const data = await res.json();
         document.getElementById("labelStatus").innerText = data.message;
         setBadge(label);
+        lastSavedLabel = label;
+        renderLastPrediction();
         loadTrainingStatus();
       } catch (err) {
         document.getElementById("labelStatus").innerText = `Label save failed: ${err}`;
       }
     }
+
     async function trainModel() {
-  const status = document.getElementById("trainStatus");
-  const output = document.getElementById("trainOutput");
+      const status = document.getElementById("trainStatus");
+      const output = document.getElementById("trainOutput");
 
-  status.innerText = "Training started...";
-  output.innerText = "Running train_model.py ...";
+      status.innerText = "Training started...";
+      output.innerText = "Running train_model.py ...";
 
-  try {
-    const res = await fetch("/train-model", {
-      method: "POST"
-    });
+      try {
+        const res = await fetch("/train-model", {
+          method: "POST"
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    if (data.error) {
-      status.innerText = `${data.message}`;
-      output.innerText =
-        `${data.output || ""}\n${data.error || ""}`.trim() || "Training failed with no extra output";
-    } else {
-      status.innerText = data.message || "Training finished";
-      output.innerText = data.output || "Training completed with no console output";
+        if (data.error) {
+          status.innerText = `${data.message}`;
+          output.innerText =
+            `${data.output || ""}\n${data.error || ""}`.trim() || "Training failed with no extra output";
+        } else {
+          status.innerText = data.message || "Training finished";
+          output.innerText = data.output || "Training completed with no console output";
+        }
+
+        loadTrainingStatus();
+      } catch (err) {
+        status.innerText = "Training failed";
+        output.innerText = `Request error: ${err}`;
+      }
     }
 
-    loadTrainingStatus();
-  } catch (err) {
-    status.innerText = "Training failed";
-    output.innerText = `Request error: ${err}`;
-  }
-}
     async function sendManualGrade() {
       try {
         const res = await fetch("/grade", {
@@ -705,28 +705,7 @@ renderLastPrediction();
           box.innerHTML = "No scans yet";
           return;
         }
-        async function trainModel() {
-  const status = document.getElementById("trainStatus");
-  status.innerText = "Training started...";
 
-  try {
-    const res = await fetch("/train-model", {
-      method: "POST"
-    });
-
-    const data = await res.json();
-
-    if (data.error) {
-      status.innerText = `${data.message}: ${data.error}`;
-    } else {
-      status.innerText = data.message || "Training finished";
-    }
-
-    loadTrainingStatus();
-  } catch (err) {
-    status.innerText = `Training failed: ${err}`;
-  }
-}
         box.innerHTML = data.history.map(item => `
           <div class="history-item">
             <div class="history-filename">${item.filename}</div>
@@ -766,6 +745,7 @@ renderLastPrediction();
       }
       loadHistory();
       loadTrainingStatus();
+      renderLastPrediction();
     });
   </script>
 </body>
