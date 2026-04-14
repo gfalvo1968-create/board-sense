@@ -566,6 +566,13 @@ function speak(text) {
         renderLastPrediction();
         await loadHistory();
       } catch (err) {
+        if (data.ai_grade === "HIGH") {
+        speak("High value board detected");
+.     } else {
+         speak("Board classified as " + (data.ai_grade || "unknown"));
+      }
+        
+        
         status.innerText = "Upload failed: " + err.message;
         setBadge("ERROR");
       } finally {
