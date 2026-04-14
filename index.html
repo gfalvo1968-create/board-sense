@@ -760,6 +760,25 @@
       if (input) {
         input.addEventListener("change", uploadImage);
       }
+     
+      <script>
+async function runPrediction() {
+  try {
+    const response = await fetch('/predict', {
+      method: 'POST'
+    });
+
+    const data = await response.json();
+
+    document.getElementById('prediction-result').innerText =
+      "Prediction: " + data.prediction;
+      
+  } catch (err) {
+    document.getElementById('prediction-result').innerText =
+      "Error running prediction";
+  }
+}
+ 
       loadHistory();
       loadTrainingStatus();
       renderLastPrediction();
