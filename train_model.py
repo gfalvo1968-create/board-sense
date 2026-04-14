@@ -78,7 +78,7 @@ model.compile(
 
 model.fit(train_ds, validation_data=val_ds, epochs=8)
 
-os.makedirs("model", exist_ok=True)
+os.makedirs(os.path.dirname(MODEL_OUT), exist_ok=True)
 model.save(MODEL_OUT)
 
 with open("model/class_names.txt", "w", encoding="utf-8") as f:
