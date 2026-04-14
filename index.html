@@ -423,6 +423,18 @@
     
     let voiceEnabled = true;
 
+function toggleVoice() {
+  voiceEnabled = !voiceEnabled;
+
+  const btn = document.getElementById("voiceBtn");
+  btn.textContent = voiceEnabled ? "🔊 Voice ON" : "🔇 Voice OFF";
+
+  if (voiceEnabled) {
+    speak("Voice enabled");
+  }
+}
+
+    
 function speak(text) {
   if (!voiceEnabled || !('speechSynthesis' in window)) return;
 
