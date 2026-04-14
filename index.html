@@ -545,9 +545,17 @@ function speak(text) {
           action: data.action || "Review manually"
         };
 
-           setTimeout(() => {
-            speak("Board classified as " + (data.ai_grade || "unknown"));
-       }, 200);
+           if (data.ai_grade === "HIGH") {
+           speak("High value board detected");
+         } else if (data.ai_grade === "MEDIUM") {
+               speak("Medium grade board");
+         } else if (data.ai_grade === "LOW") {
+            speak("Low grade material");
+          } else if (data.ai_grade === "JUNK") {
+            speak("Discard board");
+          } else {
+             speak("Board classified");
+        }
         
         
         lastSavedLabel = "";
