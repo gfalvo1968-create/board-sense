@@ -545,6 +545,11 @@ function speak(text) {
           action: data.action || "Review manually"
         };
 
+           setTimeout(() => {
+            speak("Board classified as " + (data.ai_grade || "unknown"));
+       }, 200);
+        
+        
         lastSavedLabel = "";
         document.getElementById("result").innerText =
           "Confidence: " + (data.confidence || "N/A") +
