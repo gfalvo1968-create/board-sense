@@ -34,7 +34,7 @@ if label_df["label"].nunique() < 2:
 
 train_df, val_df = train_test_split(
     label_df,
-    test_size=0.2,
+    test_size=0.3,  # or 0.4
     random_state=42,
     stratify=label_df["label_index"]
 )
