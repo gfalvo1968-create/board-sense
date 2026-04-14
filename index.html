@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BoardSense</title>
-
   <style>
     * {
       box-sizing: border-box;
@@ -12,60 +11,58 @@
 
     body {
       margin: 0;
+      font-family: Arial, sans-serif;
       background: #000;
       color: #39ff14;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-    }
-
-    .splash-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      width: 100%;
-      background: radial-gradient(circle at center, #001a00 0%, #000 70%);
       padding: 20px;
     }
 
-    .radar-container {
-      position: relative;
-      width: 320px;
+    .splash-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .splash-inner {
       text-align: center;
+      width: 100%;
+      max-width: 520px;
     }
 
     .radar-circle {
-      width: 320px;
-      height: 320px;
-      border: 3px solid #39ff14;
-      border-radius: 50%;
-      box-shadow: 0 0 12px #39ff14, 0 0 30px rgba(57,255,20,0.35);
       position: relative;
+      width: 280px;
+      height: 280px;
+      margin: 0 auto 24px;
+      border: 4px solid #39ff14;
+      border-radius: 50%;
+      box-shadow: 0 0 25px rgba(57, 255, 20, 0.75);
       overflow: hidden;
-      background: radial-gradient(circle at center, rgba(57,255,20,0.08) 0%, rgba(0,0,0,0) 60%);
-      margin: 0 auto;
+      background:
+        radial-gradient(circle at center, rgba(57,255,20,0.12), rgba(0,0,0,0.9) 65%);
     }
 
     .radar-ring {
       position: absolute;
-      border: 1px solid rgba(57,255,20,0.28);
+      border: 1px solid rgba(57, 255, 20, 0.35);
       border-radius: 50%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
     }
 
-    .ring1 { width: 80px; height: 80px; }
-    .ring2 { width: 160px; height: 160px; }
-    .ring3 { width: 240px; height: 240px; }
+    .ring1 { width: 70px; height: 70px; }
+    .ring2 { width: 140px; height: 140px; }
+    .ring3 { width: 210px; height: 210px; }
 
-    .crosshair-horizontal,
-    .crosshair-vertical {
+    .crosshair-h,
+    .crosshair-v {
       position: absolute;
-      background: rgba(57,255,20,0.25);
+      background: rgba(57, 255, 20, 0.35);
     }
 
-    .crosshair-horizontal {
+    .crosshair-h {
       width: 100%;
       height: 1px;
       top: 50%;
@@ -73,11 +70,11 @@
       transform: translateY(-50%);
     }
 
-    .crosshair-vertical {
+    .crosshair-v {
       width: 1px;
       height: 100%;
-      top: 0;
       left: 50%;
+      top: 0;
       transform: translateX(-50%);
     }
 
@@ -88,119 +85,90 @@
       top: 50%;
       left: 50%;
       transform-origin: left center;
-      background: linear-gradient(to right, rgba(57,255,20,0), #39ff14);
-      box-shadow: 0 0 10px #39ff14, 0 0 20px rgba(57,255,20,0.5);
-      animation: spin 2s linear infinite;
-      z-index: 2;
-    }
-
-    .sweep-glow {
-      position: absolute;
-      width: 50%;
-      height: 50%;
-      top: 0;
-      left: 50%;
-      transform-origin: bottom left;
-      background: conic-gradient(
-        from 0deg,
-        rgba(57,255,20,0.0) 0deg,
-        rgba(57,255,20,0.03) 10deg,
-        rgba(57,255,20,0.16) 35deg,
-        rgba(57,255,20,0.0) 60deg
-      );
-      animation: spin 2s linear infinite;
-      z-index: 1;
-      pointer-events: none;
+      background: linear-gradient(to right, rgba(57,255,20,0.95), rgba(57,255,20,0));
+      animation: sweep 2s linear infinite;
+      box-shadow: 0 0 20px rgba(57,255,20,0.8);
     }
 
     .center-dot {
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       background: #39ff14;
       border-radius: 50%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 12px #39ff14;
-      z-index: 3;
+      box-shadow: 0 0 12px rgba(57,255,20,0.95);
     }
 
     .program-name {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) scale(1);
-      font-size: 30px;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
       font-weight: bold;
       color: #39ff14;
-      text-shadow: 0 0 8px #39ff14, 0 0 18px rgba(57,255,20,0.65);
-      animation: pulseText 2s ease-in-out infinite;
-      z-index: 4;
-      letter-spacing: 1px;
+      text-shadow: 0 0 12px rgba(57,255,20,0.95);
+      white-space: nowrap;
+    }
+
+    @keyframes sweep {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .scan-text {
-      margin-top: 18px;
-      color: #39ff14;
-      font-size: 15px;
-      letter-spacing: 3px;
-      text-shadow: 0 0 10px #39ff14;
-    }
-
-    .dashboard-enter {
-      margin-top: 24px;
+      font-size: 24px;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+      text-shadow: 0 0 12px rgba(57,255,20,0.9);
     }
 
     .dashboard {
       display: none;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, rgba(0,80,0,0.18), transparent 30%), #000;
-      padding: 18px;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     .dashboard-header {
       text-align: center;
-      font-size: 28px;
+      font-size: 36px;
       font-weight: bold;
-      margin: 6px 0 18px;
-      text-shadow: 0 0 10px #39ff14, 0 0 20px rgba(57,255,20,0.5);
-      letter-spacing: 1px;
+      margin-bottom: 24px;
+      text-shadow: 0 0 14px rgba(57,255,20,0.9);
     }
 
     .panel {
       border: 2px solid #39ff14;
-      border-radius: 16px;
-      background: rgba(0, 24, 0, 0.45);
-      box-shadow: 0 0 12px rgba(57,255,20,0.28);
-      padding: 16px;
-      margin-bottom: 18px;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 0 18px rgba(57,255,20,0.28);
+      background: rgba(0, 30, 0, 0.35);
     }
 
-    .panel h3 {
-      margin: 0 0 12px;
-      text-shadow: 0 0 8px #39ff14;
-    }
-
-    .file-row,
-    .action-row,
-    .label-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    h3 {
+      margin-top: 0;
+      font-size: 22px;
+      text-shadow: 0 0 10px rgba(57,255,20,0.85);
     }
 
     button {
       background: #000;
       color: #39ff14;
       border: 2px solid #39ff14;
-      border-radius: 12px;
-      padding: 10px 14px;
+      border-radius: 14px;
+      padding: 12px 18px;
       font-size: 16px;
       font-weight: bold;
-      box-shadow: 0 0 10px rgba(57,255,20,0.28);
       cursor: pointer;
+      box-shadow: 0 0 10px rgba(57,255,20,0.28);
+    }
+
+    button:hover {
+      box-shadow: 0 0 18px rgba(57,255,20,0.55);
     }
 
     button:active {
@@ -209,208 +177,151 @@
 
     .hidden-input {
       display: none;
-  
-    .glow-button {
-  background: black;
-  color: #00ff88;
-  border: 2px solid #00ff88;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  box-shadow: 0 0 10px rgba(0,255,136,0.4);
-}
-
-.glow-button:hover {
-  background: #00ff88;
-  color: black;
-}
-    
     }
 
     .status {
       margin-top: 12px;
       min-height: 24px;
-      color: #9bff87;
-      text-shadow: 0 0 8px rgba(57,255,20,0.65);
+      color: #baff9d;
       word-break: break-word;
     }
 
     .result-box {
       border: 1px solid rgba(57,255,20,0.45);
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 12px;
-      background: rgba(0, 16, 0, 0.45);
-      box-shadow: inset 0 0 10px rgba(57,255,20,0.08);
-      min-height: 52px;
-    }
-    
-    .badge {
-      display: inline-block;
-      padding: 8px 12px;
-      border: 2px solid #39ff14;
-      border-radius: 999px;
-      box-shadow: 0 0 10px rgba(57,255,20,0.35);
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .badge.high { color: #39ff14; }
-    .badge.medium { color: #b7ff3c; }
-    .badge.low { color: #7dff6b; }
-    .badge.junk { color: #ff6b6b; border-color: #ff6b6b; box-shadow: 0 0 10px rgba(255,107,107,0.35); }
-
-    .preview-card {
-      margin-top: 14px;
-      padding: 12px;
-      border: 2px solid #39ff14;
       border-radius: 14px;
-      box-shadow: 0 0 12px rgba(57,255,20,0.25);
-      background: rgba(0, 20, 0, 0.45);
-    }
-
-    #preview {
-      width: 100%;
-      max-width: 320px;
-      margin-top: 10px;
-      border: 2px solid #39ff14;
-      border-radius: 10px;
-      display: none;
-      box-shadow: 0 0 12px #39ff14;
-      transition: all 0.3s ease;
-    }
-
-    #preview.scanning {
-      box-shadow: 0 0 25px #39ff14, 0 0 40px #39ff14;
+      padding: 14px;
+      margin-top: 12px;
+      min-height: 52px;
+      background: rgba(57,255,20,0.04);
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     #scanBar {
-      height: 6px;
       width: 0%;
+      height: 10px;
+      border-radius: 999px;
       background: #39ff14;
-      box-shadow: 0 0 10px #39ff14, 0 0 20px #39ff14;
-      border-radius: 4px;
-      margin: 12px 0;
-      transition: width 1s linear;
+      box-shadow: 0 0 12px rgba(57,255,20,0.9);
+      transition: width 0.35s ease;
+      margin-top: 16px;
+      margin-bottom: 12px;
+    }
+
+    .preview-card {
+      margin-top: 16px;
+    }
+
+    #preview {
+      display: none;
+      width: 100%;
+      max-width: 320px;
+      border-radius: 14px;
+      border: 2px solid #39ff14;
+      box-shadow: 0 0 14px rgba(57,255,20,0.35);
+    }
+
+    .label-buttons,
+    .action-row,
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
     }
 
     .check-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin: 12px 0 14px;
+      gap: 12px;
+      margin-top: 14px;
     }
 
     .check-card {
-      border: 1px solid rgba(57,255,20,0.45);
+      border: 1px solid rgba(57,255,20,0.35);
       border-radius: 12px;
-      padding: 10px 12px;
-      background: rgba(0, 12, 0, 0.5);
-      box-shadow: inset 0 0 8px rgba(57,255,20,0.08);
+      padding: 14px;
+      background: rgba(57,255,20,0.04);
     }
 
-    label {
-      font-size: 18px;
+    .check-card label {
+      font-size: 16px;
+      cursor: pointer;
     }
 
-    input[type="checkbox"] {
-      transform: scale(1.2);
+    .check-card input {
       margin-right: 10px;
-      accent-color: #39ff14;
-    }
-
-    .label-section {
-      margin-top: 16px;
-    }
-
-    .label-buttons button {
-      min-width: 110px;
-    }
-
-    .history-item {
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(57,255,20,0.2);
-    }
-
-    .history-item:last-child {
-      border-bottom: none;
-    }
-
-    .history-filename {
-      font-weight: bold;
-      color: #9bff87;
-    }
-
-    .history-meta {
-      font-size: 14px;
-      opacity: 0.9;
+      transform: scale(1.2);
     }
 
     .counter-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(120px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
     }
 
     .counter-card {
       border: 1px solid rgba(57,255,20,0.35);
       border-radius: 12px;
-      padding: 10px;
-      background: rgba(0, 12, 0, 0.4);
+      padding: 14px;
+      background: rgba(57,255,20,0.04);
+      font-size: 16px;
     }
 
-    #trainOutput {
-      white-space: pre-wrap;
-      text-align: left;
-      font-size: 14px;
+    .badge {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: bold;
+      border: 2px solid #39ff14;
+      box-shadow: 0 0 10px rgba(57,255,20,0.35);
+      margin-bottom: 12px;
     }
 
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
+    .badge.high { color: #7dff7d; }
+    .badge.medium { color: #f7ff7d; border-color: #f7ff7d; box-shadow: 0 0 10px rgba(247,255,125,0.35); }
+    .badge.low { color: #7dd3ff; border-color: #7dd3ff; box-shadow: 0 0 10px rgba(125,211,255,0.35); }
+    .badge.junk { color: #ff8f8f; border-color: #ff8f8f; box-shadow: 0 0 10px rgba(255,143,143,0.35); }
 
-    @keyframes pulseText {
-      0% { transform: translate(-50%, -50%) scale(1); }
-      50% { transform: translate(-50%, -50%) scale(1.2); }
-      100% { transform: translate(-50%, -50%) scale(1); }
-    }
+    @media (max-width: 700px) {
+      .counter-grid {
+        grid-template-columns: 1fr;
+      }
 
-    @media (min-width: 768px) {
-      .dashboard {
-        max-width: 760px;
-        margin: 0 auto;
+      .dashboard-header {
+        font-size: 28px;
+      }
+
+      .radar-circle {
+        width: 230px;
+        height: 230px;
+      }
+
+      .program-name {
+        font-size: 20px;
       }
     }
   </style>
 </head>
 <body>
-
   <div class="splash-screen" id="splashScreen">
-    <div class="radar-container">
+    <div class="splash-inner">
       <div class="radar-circle">
         <div class="radar-ring ring1"></div>
         <div class="radar-ring ring2"></div>
         <div class="radar-ring ring3"></div>
-        <div class="crosshair-horizontal"></div>
-        <div class="crosshair-vertical"></div>
-        <div class="sweep-glow"></div>
+        <div class="crosshair-h"></div>
+        <div class="crosshair-v"></div>
         <div class="sweep"></div>
         <div class="center-dot"></div>
         <div class="program-name">BoardSense</div>
       </div>
-
       <div class="scan-text">SCANNING...</div>
-
-      <div class="dashboard-enter">
-        <button onclick="enterDashboard()">ENTER DASHBOARD</button>
-      </div>
+      <button onclick="enterDashboard()">ENTER DASHBOARD</button>
     </div>
   </div>
 
-  <div class="dashboard" id="dashboard" style="display:none;">
+  <div class="dashboard" id="dashboard">
     <div class="dashboard-header">BoardSense Dashboard</div>
 
     <div class="panel">
@@ -421,9 +332,10 @@
         id="imageInput"
         accept="image/*"
         class="hidden-input"
-      >
+        onchange="uploadImage()"
+      />
 
-      <div class="file-row">
+      <div class="top-actions">
         <button onclick="document.getElementById('imageInput').click()">📸 Upload Scan</button>
       </div>
 
@@ -431,7 +343,7 @@
       <p class="status" id="uploadStatus">System ready</p>
 
       <div class="preview-card">
-        <img id="preview" alt="Board preview">
+        <img id="preview" alt="Board preview" />
       </div>
 
       <div class="label-section">
@@ -450,11 +362,11 @@
       <h3>Manual Grading</h3>
 
       <div class="check-grid">
-        <div class="check-card"><label><input type="checkbox" id="gf">Gold Fingers</label></div>
-        <div class="check-card"><label><input type="checkbox" id="dc">Dense Chips</label></div>
-        <div class="check-card"><label><input type="checkbox" id="ic">Industrial Connectors</label></div>
-        <div class="check-card"><label><input type="checkbox" id="pb">Power Board</label></div>
-        <div class="check-card"><label><input type="checkbox" id="hv">Heavy</label></div>
+        <div class="check-card"><label><input type="checkbox" id="gf" />Gold Fingers</label></div>
+        <div class="check-card"><label><input type="checkbox" id="dc" />Dense Chips</label></div>
+        <div class="check-card"><label><input type="checkbox" id="ic" />Industrial Connectors</label></div>
+        <div class="check-card"><label><input type="checkbox" id="pb" />Power Board</label></div>
+        <div class="check-card"><label><input type="checkbox" id="hv" />Heavy</label></div>
       </div>
 
       <div class="action-row">
@@ -476,6 +388,7 @@
     <div class="panel">
       <h3>Training Readiness</h3>
       <button onclick="loadTrainingStatus()">Refresh Counter</button>
+
       <div class="counter-grid">
         <div class="counter-card">HIGH: <span id="countHigh">0</span></div>
         <div class="counter-card">MEDIUM: <span id="countMedium">0</span></div>
@@ -500,40 +413,9 @@
   </div>
 
   <script>
-    let audioStarted = false;
     let lastUploadedFilename = "";
     let lastPrediction = null;
     let lastSavedLabel = "";
-    const radarSweepMs = 2000;
-
-    function startRadarBeepLoop() {
-      if (audioStarted) return;
-      audioStarted = true;
-
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      const audioCtx = new AudioContextClass();
-
-      function beep() {
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-
-        gainNode.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.01);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.18);
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.18);
-      }
-
-      beep();
-      setInterval(beep, radarSweepMs);
-    }
 
     function enterDashboard() {
       document.getElementById("splashScreen").style.display = "none";
@@ -547,9 +429,9 @@
 
       const g = (grade || "").toUpperCase();
       if (g === "HIGH") badge.classList.add("high");
-      else if (g === "MEDIUM") badge.classList.add("medium");
-      else if (g === "LOW") badge.classList.add("low");
-      else if (g === "JUNK") badge.classList.add("junk");
+      if (g === "MEDIUM") badge.classList.add("medium");
+      if (g === "LOW") badge.classList.add("low");
+      if (g === "JUNK") badge.classList.add("junk");
     }
 
     function renderLastPrediction() {
@@ -560,19 +442,17 @@
         return;
       }
 
-      box.innerHTML = `
-        <div class="history-item">
-          <div class="history-filename">${lastPrediction.filename || "Unknown file"}</div>
-          <div class="history-meta">AI Grade: ${lastPrediction.ai_grade || "N/A"}</div>
-          <div class="history-meta">Confidence: ${lastPrediction.confidence || "N/A"}</div>
-          <div class="history-meta">Action: ${lastPrediction.action || "N/A"}</div>
-          <div class="history-meta">Saved Label: ${lastSavedLabel || "None yet"}</div>
-        </div>
-      `;
+      box.innerHTML =
+        "<strong>File:</strong> " + (lastPrediction.filename || "Unknown") + "<br>" +
+        "<strong>AI Grade:</strong> " + (lastPrediction.ai_grade || "N/A") + "<br>" +
+        "<strong>Confidence:</strong> " + (lastPrediction.confidence || "N/A") + "<br>" +
+        "<strong>Action:</strong> " + (lastPrediction.action || "N/A") + "<br>" +
+        "<strong>Saved Label:</strong> " + (lastSavedLabel || "None yet");
     }
 
     async function uploadImage() {
-      const file = document.getElementById("imageInput").files[0];
+      const fileInput = document.getElementById("imageInput");
+      const file = fileInput.files[0];
       const status = document.getElementById("uploadStatus");
       const preview = document.getElementById("preview");
       const scanBar = document.getElementById("scanBar");
@@ -584,9 +464,8 @@
 
       preview.src = URL.createObjectURL(file);
       preview.style.display = "block";
-      preview.classList.add("scanning");
-      scanBar.style.width = "100%";
 
+      scanBar.style.width = "100%";
       status.innerText = "SCANNING...";
       document.getElementById("labelStatus").innerText = "";
       document.getElementById("result").innerText = "";
@@ -603,8 +482,12 @@
 
         const data = await res.json();
 
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "Upload failed");
+        }
+
         lastUploadedFilename = data.filename || "";
-        status.innerText = `Saved: ${data.filename || "uploaded"}`;
+        status.innerText = "Saved: " + (data.filename || "uploaded");
         setBadge(data.ai_grade || "PENDING REVIEW");
 
         lastPrediction = {
@@ -615,17 +498,16 @@
         };
 
         lastSavedLabel = "";
-        renderLastPrediction();
-
         document.getElementById("result").innerText =
-          `Confidence: ${data.confidence || "N/A"} | Action: ${data.action || "Review manually"}`;
+          "Confidence: " + (data.confidence || "N/A") +
+          " | Action: " + (data.action || "Review manually");
 
-        loadHistory();
+        renderLastPrediction();
+        await loadHistory();
       } catch (err) {
-        status.innerText = `Upload failed: ${err}`;
+        status.innerText = "Upload failed: " + err.message;
         setBadge("ERROR");
       } finally {
-        preview.classList.remove("scanning");
         setTimeout(() => {
           scanBar.style.width = "0%";
         }, 500);
@@ -633,29 +515,116 @@
     }
 
     async function saveLabel(label) {
+      const status = document.getElementById("labelStatus");
+
       if (!lastUploadedFilename) {
-        document.getElementById("labelStatus").innerText = "Scan a board first";
+        status.innerText = "Upload an image first";
         return;
       }
 
       try {
-        const res = await fetch("/label", {
+        const res = await fetch("/save-label", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             filename: lastUploadedFilename,
-            label: label
+            label: label.toLowerCase()
           })
         });
 
         const data = await res.json();
-        document.getElementById("labelStatus").innerText = data.message;
-        setBadge(label);
-        lastSavedLabel = label;
+
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "Save failed");
+        }
+
+        lastSavedLabel = label.toUpperCase();
+        status.innerText = "Saved label: " + lastSavedLabel;
         renderLastPrediction();
-        loadTrainingStatus();
+        await loadTrainingStatus();
+        await loadHistory();
       } catch (err) {
-        document.getElementById("labelStatus").innerText = `Label save failed: ${err}`;
+        status.innerText = "Save failed: " + err.message;
+      }
+    }
+
+    async function sendManualGrade() {
+      const gf = document.getElementById("gf").checked;
+      const dc = document.getElementById("dc").checked;
+      const ic = document.getElementById("ic").checked;
+      const pb = document.getElementById("pb").checked;
+      const hv = document.getElementById("hv").checked;
+
+      let grade = "MEDIUM";
+      let reason = [];
+
+      if (gf) reason.push("Gold Fingers");
+      if (dc) reason.push("Dense Chips");
+      if (ic) reason.push("Industrial Connectors");
+      if (pb) reason.push("Power Board");
+      if (hv) reason.push("Heavy");
+
+      if ((gf && dc) || (gf && ic) || (dc && ic)) {
+        grade = "HIGH";
+      } else if (pb || hv) {
+        grade = "LOW";
+      } else if (!gf && !dc && !ic && !pb && !hv) {
+        grade = "JUNK";
+      }
+
+      setBadge(grade);
+      document.getElementById("result").innerText =
+        "Manual Grade: " + grade + (reason.length ? " | Signals: " + reason.join(", ") : "");
+    }
+
+    async function loadHistory() {
+      const box = document.getElementById("historyBox");
+
+      try {
+        const res = await fetch("/history");
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "History failed");
+        }
+
+        if (!Array.isArray(data) || data.length === 0) {
+          box.innerHTML = "No scans yet";
+          return;
+        }
+
+        box.innerHTML = data.slice().reverse().map(item => {
+          return (
+            "<div style='margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid rgba(57,255,20,0.2);'>" +
+            "<strong>File:</strong> " + (item.filename || "Unknown") + "<br>" +
+            "<strong>Label:</strong> " + (item.label || "N/A") +
+            "</div>"
+          );
+        }).join("");
+      } catch (err) {
+        box.innerHTML = "Failed to load history: " + err.message;
+      }
+    }
+
+    async function loadTrainingStatus() {
+      try {
+        const res = await fetch("/training-status");
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "Training status failed");
+        }
+
+        document.getElementById("countHigh").innerText = data.high ?? 0;
+        document.getElementById("countMedium").innerText = data.medium ?? 0;
+        document.getElementById("countLow").innerText = data.low ?? 0;
+        document.getElementById("countJunk").innerText = data.junk ?? 0;
+        document.getElementById("countTotal").innerText = data.total ?? 0;
+        document.getElementById("countReady").innerText = data.ready ? "YES" : "NO";
+      } catch (err) {
+        document.getElementById("countReady").innerText = "ERROR";
       }
     }
 
@@ -667,122 +636,27 @@
       output.innerText = "Running train_model.py ...";
 
       try {
-        const res = await fetch("/train-model", {
+        const res = await fetch("/train", {
           method: "POST"
         });
 
         const data = await res.json();
 
-        if (data.error) {
-          status.innerText = `${data.message}`;
-          output.innerText =
-            `${data.output || ""}\n${data.error || ""}`.trim() || "Training failed with no extra output";
-        } else {
-          status.innerText = data.message || "Training finished";
-          output.innerText = data.output || "Training completed with no console output";
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "Training failed");
         }
 
-        loadTrainingStatus();
+        status.innerText = data.message || "Training completed successfully";
+        output.innerText = data.output || "Training completed";
       } catch (err) {
         status.innerText = "Training failed";
-        output.innerText = `Request error: ${err}`;
+        output.innerText = err.message;
       }
     }
 
-    async function sendManualGrade() {
-      try {
-        const res = await fetch("/grade", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            gold_fingers: document.getElementById("gf").checked,
-            dense_chips: document.getElementById("dc").checked,
-            industrial_connectors: document.getElementById("ic").checked,
-            power_board: document.getElementById("pb").checked,
-            heavy: document.getElementById("hv").checked
-          })
-        });
-
-        const data = await res.json();
-        setBadge(data.grade);
-        document.getElementById("result").innerText =
-          `Score: ${data.score} | Action: ${data.action}`;
-      } catch (err) {
-        document.getElementById("result").innerText = `Manual grading failed: ${err}`;
-      }
-    }
-
-    async function loadHistory() {
-      try {
-        const res = await fetch("/history");
-        const data = await res.json();
-        const box = document.getElementById("historyBox");
-
-        if (!data.history || data.history.length === 0) {
-          box.innerHTML = "No scans yet";
-          return;
-        }
-
-        box.innerHTML = data.history.map(item => `
-          <div class="history-item">
-            <div class="history-filename">${item.filename}</div>
-            <div class="history-meta">
-              Grade: ${item.ai_grade} | Confidence: ${item.confidence} | ${item.timestamp}
-            </div>
-          </div>
-        `).join("");
-      } catch (err) {
-        document.getElementById("historyBox").innerHTML = `History load failed: ${err}`;
-      }
-    }
-
-    async function loadTrainingStatus() {
-      try {
-        const res = await fetch("/training-status");
-        const data = await res.json();
-
-        document.getElementById("countHigh").innerText = data.HIGH;
-        document.getElementById("countMedium").innerText = data.MEDIUM;
-        document.getElementById("countLow").innerText = data.LOW;
-        document.getElementById("countJunk").innerText = data.JUNK;
-        document.getElementById("countTotal").innerText = data.TOTAL;
-        document.getElementById("countReady").innerText = data.READY ? "YES" : "NO";
-      } catch (err) {
-        document.getElementById("countReady").innerText = "ERR";
-      }
-    }
-
-    document.body.addEventListener("click", startRadarBeepLoop, { once: true });
-    document.body.addEventListener("touchstart", startRadarBeepLoop, { once: true });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const input = document.getElementById("imageInput");
-      if (input) {
-        input.addEventListener("change", uploadImage);
-      }
-     
-      <script>
-async function runPrediction() {
-  try {
-    const response = await fetch('/predict', {
-      method: 'POST'
-    });
-
-    const data = await response.json();
-
-    document.getElementById('prediction-result').innerText =
-      "Prediction: " + data.prediction;
-      
-  } catch (err) {
-    document.getElementById('prediction-result').innerText =
-      "Error running prediction";
-  }
-}
- 
-      loadHistory();
-      loadTrainingStatus();
-      renderLastPrediction();
-    });
+    loadTrainingStatus();
+    loadHistory();
+    renderLastPrediction();
   </script>
 </body>
 </html>
