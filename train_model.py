@@ -26,6 +26,12 @@ class_names = sorted(label_df["label"].unique().tolist())
 class_to_index = {name: i for i, name in enumerate(class_names)}
 label_df["label_index"] = label_df["label"].map(class_to_index)
 
+if len(label_df) < 3:
+    raise ValueError("Need at least 3 labeled images to train the model.")
+
+if label_df["label"].nunique() < 2:
+    raise ValueError("Need at least 2 different label classes to train the model.")
+
 train_df, val_df = train_test_split(
     label_df,
     test_size=0.2,
