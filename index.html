@@ -563,24 +563,27 @@ function speak(text) {
           "Confidence: " + (data.confidence || "N/A") +
           " | Action: " + (data.action || "Review manually");
 
-        renderLastPrediction();
-        await loadHistory();
-      } catch (err) {
-        if (data.ai_grade === "HIGH") {
-        speak("High value board detected");
-.     } else {
-         speak("Board classified as " + (data.ai_grade || "unknown"));
-      }
-        
-        
-        status.innerText = "Upload failed: " + err.message;
-        setBadge("ERROR");
-      } finally {
-        setTimeout(() => {
-          scanBar.style.width = "0%";
-        }, 500);
-      }
-    }
+         lastPrediction = {
+  filename: data.filename || "",
+  ai_grade: data.ai_grade || "PENDING REVIEW",
+  confidence: data.confidence || "N/A",
+  action: data.action || "Review manually"
+};
+
+if (data.ai_grade === "HIGH") {
+  speak("High value board detected");
+} else if (data.ai_grade === "MEDIUM") {
+  speak("Medium grade board");
+} else if (data.ai_grade === "LOW") {
+  speak("Low grade material");
+} else if (data.ai_grade === "JUNK") {
+  speak("Discard board");
+} else {
+  speak("Board classified");
+}
+
+renderLastPrediction();
+await loadHistory();
 
     async function saveLabel(label) {
       const status = document.getElementById("labelStatus");
