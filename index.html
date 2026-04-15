@@ -637,11 +637,6 @@
           })
         });
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          throw new Error(data.detail || data.error || "Save label failed");
-        }
 
         lastSavedLabel = label;
         status.innerText = "Saved label: " + label;
