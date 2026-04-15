@@ -574,6 +574,15 @@
         return;
       }
 
+      } finally {
+    setTimeout(() => {
+        if (scanBar) {
+            scanBar.style.width = "0%";
+        }
+    }, 500);
+}
+      
+      
       preview.src = URL.createObjectURL(file);
       preview.style.display = "block";
 
