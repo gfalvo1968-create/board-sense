@@ -52,10 +52,4 @@ elif confidence >= 60:
 else:
     return "PENDING REVIEW", confidence, "Unseen or uncertain board, review manually"
 
-    return {
-    "filename": safe_name,
-    "image_url": f"/data/images/{safe_name}",
-    "ai_grade": ai_grade,
-    "confidence": confidence,
-    "action": action
 }
