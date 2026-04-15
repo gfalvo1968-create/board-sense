@@ -14,216 +14,103 @@
       font-family: Arial, sans-serif;
       background: #000;
       color: #39ff14;
+    }
+
+    .splash-screen,
+    .dashboard {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
       padding: 20px;
-    }
-
-    #voiceBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-    
-    
-    .splash-screen {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .splash-inner {
-      text-align: center;
-      width: 100%;
-      max-width: 520px;
-    }
-
-    .radar-circle {
-      position: relative;
-      width: 280px;
-      height: 280px;
-      margin: 0 auto 24px;
-      border: 4px solid #39ff14;
-      border-radius: 50%;
-      box-shadow: 0 0 25px rgba(57, 255, 20, 0.75);
-      overflow: hidden;
-      background:
-        radial-gradient(circle at center, rgba(57,255,20,0.12), rgba(0,0,0,0.9) 65%);
-    }
-
-    .radar-ring {
-      position: absolute;
-      border: 1px solid rgba(57, 255, 20, 0.35);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .ring1 { width: 70px; height: 70px; }
-    .ring2 { width: 140px; height: 140px; }
-    .ring3 { width: 210px; height: 210px; }
-
-    .crosshair-h,
-    .crosshair-v {
-      position: absolute;
-      background: rgba(57, 255, 20, 0.35);
-    }
-
-    .crosshair-h {
-      width: 100%;
-      height: 1px;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-    }
-
-    .crosshair-v {
-      width: 1px;
-      height: 100%;
-      left: 50%;
-      top: 0;
-      transform: translateX(-50%);
-    }
-
-    .sweep {
-      position: absolute;
-      width: 50%;
-      height: 2px;
-      top: 50%;
-      left: 50%;
-      transform-origin: left center;
-      background: linear-gradient(to right, rgba(57,255,20,0.95), rgba(57,255,20,0));
-      animation: sweep 2s linear infinite;
-      box-shadow: 0 0 20px rgba(57,255,20,0.8);
-    }
-
-    .center-dot {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #39ff14;
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 12px rgba(57,255,20,0.95);
-    }
-
-    .program-name {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 24px;
-      font-weight: bold;
-      color: #39ff14;
-      text-shadow: 0 0 12px rgba(57,255,20,0.95);
-      white-space: nowrap;
-    }
-
-    @keyframes sweep {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .scan-text {
-      font-size: 24px;
-      letter-spacing: 4px;
-      margin-bottom: 24px;
-      text-shadow: 0 0 12px rgba(57,255,20,0.9);
     }
 
     .dashboard {
       display: none;
-      max-width: 900px;
-      margin: 0 auto;
     }
 
     .dashboard-header {
       text-align: center;
-      font-size: 36px;
+      font-size: 34px;
       font-weight: bold;
-      margin-bottom: 24px;
-      text-shadow: 0 0 14px rgba(57,255,20,0.9);
+      margin: 10px 0 24px;
+      text-shadow: 0 0 18px rgba(57, 255, 20, 0.75);
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
     }
 
     .panel {
       border: 2px solid #39ff14;
-      border-radius: 18px;
-      padding: 20px;
+      border-radius: 22px;
+      padding: 22px;
       margin-bottom: 24px;
-      box-shadow: 0 0 18px rgba(57,255,20,0.28);
-      background: rgba(0, 30, 0, 0.35);
+      background: rgba(0, 30, 0, 0.45);
+      box-shadow: 0 0 16px rgba(57, 255, 20, 0.25);
     }
 
     h3 {
-      margin-top: 0;
+      margin: 0 0 14px;
       font-size: 22px;
-      text-shadow: 0 0 10px rgba(57,255,20,0.85);
+      text-shadow: 0 0 10px rgba(57, 255, 20, 0.45);
     }
 
     button {
-      background: #000;
-      color: #39ff14;
       border: 2px solid #39ff14;
       border-radius: 14px;
-      padding: 12px 18px;
+      padding: 10px 18px;
+      background: transparent;
+      color: #39ff14;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(57,255,20,0.28);
+      box-shadow: 0 0 10px rgba(57, 255, 20, 0.28);
+      transition: transform 0.08s ease, box-shadow 0.2s ease;
     }
 
     button:hover {
-      box-shadow: 0 0 18px rgba(57,255,20,0.55);
+      box-shadow: 0 0 16px rgba(57, 255, 20, 0.45);
     }
 
     button:active {
       transform: scale(0.98);
     }
 
+    #voiceBtn {
+      min-width: 180px;
+    }
+
     .hidden-input {
       display: none;
     }
 
-    .#voiceBtn {
-  border: 2px solid #39ff14;
-  border-radius: 12px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #9bff87;
-  background: transparent;
-  box-shadow: 0 0 10px rgba(57,255,20,0.4);
-}
-    
-    
-    status {
+    .file-row,
+    .label-buttons,
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       margin-top: 12px;
-      min-height: 24px;
-      color: #baff9d;
-      word-break: break-word;
-    }
-
-    .result-box {
-      border: 1px solid rgba(57,255,20,0.45);
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 12px;
-      min-height: 52px;
-      background: rgba(57,255,20,0.04);
-      white-space: pre-wrap;
-      word-break: break-word;
     }
 
     #scanBar {
       width: 0%;
       height: 10px;
-      border-radius: 999px;
+      border-radius: 10px;
       background: #39ff14;
-      box-shadow: 0 0 12px rgba(57,255,20,0.9);
+      margin-top: 14px;
+      box-shadow: 0 0 12px rgba(57, 255, 20, 0.55);
       transition: width 0.35s ease;
-      margin-top: 16px;
-      margin-bottom: 12px;
+    }
+
+    .status {
+      margin-top: 14px;
+      min-height: 24px;
+      color: #aaff9d;
+      text-shadow: 0 0 8px rgba(57, 255, 20, 0.45);
+      word-break: break-word;
     }
 
     .preview-card {
@@ -233,118 +120,300 @@
     #preview {
       display: none;
       width: 100%;
-      max-width: 320px;
+      max-width: 340px;
       border-radius: 14px;
-      border: 2px solid #39ff14;
-      box-shadow: 0 0 14px rgba(57,255,20,0.35);
+      border: 1px solid rgba(57, 255, 20, 0.45);
+      box-shadow: 0 0 14px rgba(57, 255, 20, 0.18);
     }
 
-    .label-buttons,
-    .action-row,
-    .top-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 12px;
+    .label-section {
+      margin-top: 20px;
+    }
+
+    .result-box {
+      margin-top: 16px;
+      min-height: 56px;
+      border: 1px solid rgba(57, 255, 20, 0.45);
+      border-radius: 14px;
+      padding: 14px;
+      box-shadow: inset 0 0 12px rgba(57, 255, 20, 0.08);
+      word-break: break-word;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 2px solid #39ff14;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      box-shadow: 0 0 12px rgba(57, 255, 20, 0.25);
+    }
+
+    .badge.high {
+      color: #39ff14;
+    }
+
+    .badge.medium {
+      color: #d7ff4a;
+      border-color: #d7ff4a;
+      box-shadow: 0 0 12px rgba(215, 255, 74, 0.3);
+    }
+
+    .badge.low {
+      color: #7de3ff;
+      border-color: #7de3ff;
+      box-shadow: 0 0 12px rgba(125, 227, 255, 0.3);
+    }
+
+    .badge.junk {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+      box-shadow: 0 0 12px rgba(255, 107, 107, 0.3);
     }
 
     .check-grid {
       display: grid;
-      gap: 12px;
-      margin-top: 14px;
+      gap: 14px;
     }
 
     .check-card {
-      border: 1px solid rgba(57,255,20,0.35);
-      border-radius: 12px;
-      padding: 14px;
-      background: rgba(57,255,20,0.04);
+      border: 1px solid rgba(57, 255, 20, 0.28);
+      border-radius: 14px;
+      padding: 14px 16px;
     }
 
     .check-card label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 16px;
-      cursor: pointer;
     }
 
-    .check-card input {
-      margin-right: 10px;
-      transform: scale(1.2);
+    .check-card input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
     }
 
     .counter-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 14px;
       margin-top: 14px;
     }
 
     .counter-card {
-      border: 1px solid rgba(57,255,20,0.35);
-      border-radius: 12px;
+      border: 1px solid rgba(57, 255, 20, 0.28);
+      border-radius: 14px;
       padding: 14px;
-      background: rgba(57,255,20,0.04);
-      font-size: 16px;
+      font-size: 18px;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 10px 14px;
-      border-radius: 999px;
+    .splash-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .radar-container {
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+    }
+
+    .radar-circle {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      margin: 0 auto;
+      position: relative;
+      border: 2px solid rgba(57, 255, 20, 0.6);
+      box-shadow: 0 0 24px rgba(57, 255, 20, 0.25);
+      overflow: hidden;
+    }
+
+    .radar-ring {
+      position: absolute;
+      border: 1px solid rgba(57, 255, 20, 0.35);
+      border-radius: 50%;
+    }
+
+    .ring1 {
+      inset: 20%;
+    }
+
+    .ring2 {
+      inset: 35%;
+    }
+
+    .ring3 {
+      inset: 48%;
+    }
+
+    .crosshair-horizontal,
+    .crosshair-vertical {
+      position: absolute;
+      background: rgba(57, 255, 20, 0.35);
+    }
+
+    .crosshair-horizontal {
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      transform: translateY(-50%);
+    }
+
+    .crosshair-vertical {
+      left: 50%;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      transform: translateX(-50%);
+    }
+
+    .center-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #39ff14;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
+    }
+
+    .sweep-glow,
+    .sweep {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform-origin: bottom center;
+      pointer-events: none;
+    }
+
+    .sweep-glow {
+      width: 160px;
+      height: 160px;
+      background: conic-gradient(from 180deg, rgba(57,255,20,0.0), rgba(57,255,20,0.18), rgba(57,255,20,0.0));
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 0 0 160px 160px;
+      animation: sweep 2.4s linear infinite;
+      filter: blur(8px);
+    }
+
+    .sweep {
+      width: 2px;
+      height: 160px;
+      background: rgba(57, 255, 20, 0.85);
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: sweep 2.4s linear infinite;
+      box-shadow: 0 0 16px rgba(57, 255, 20, 0.8);
+    }
+
+    .program-name {
+      position: absolute;
+      left: 50%;
+      top: 72%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
       font-weight: bold;
-      border: 2px solid #39ff14;
-      box-shadow: 0 0 10px rgba(57,255,20,0.35);
-      margin-bottom: 12px;
+      text-shadow: 0 0 18px rgba(57, 255, 20, 0.75);
+      white-space: nowrap;
     }
 
-    .badge.high { color: #7dff7d; }
-    .badge.medium { color: #f7ff7d; border-color: #f7ff7d; box-shadow: 0 0 10px rgba(247,255,125,0.35); }
-    .badge.low { color: #7dd3ff; border-color: #7dd3ff; box-shadow: 0 0 10px rgba(125,211,255,0.35); }
-    .badge.junk { color: #ff8f8f; border-color: #ff8f8f; box-shadow: 0 0 10px rgba(255,143,143,0.35); }
+    .scan-text {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 24px 0 22px;
+      text-shadow: 0 0 12px rgba(57, 255, 20, 0.65);
+      animation: pulseText 1.5s infinite;
+    }
 
-    @media (max-width: 700px) {
+    .dashboard-enter {
+      margin-top: 8px;
+    }
+
+    @keyframes sweep {
+      from {
+        transform: translateX(-50%) rotate(0deg);
+      }
+      to {
+        transform: translateX(-50%) rotate(360deg);
+      }
+    }
+
+    @keyframes pulseText {
+      0%, 100% {
+        opacity: 0.7;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 767px) {
       .counter-grid {
         grid-template-columns: 1fr;
       }
 
-      .dashboard-header {
-        font-size: 28px;
+      .radar-circle {
+        width: 260px;
+        height: 260px;
       }
 
-      .radar-circle {
-        width: 230px;
-        height: 230px;
+      .sweep,
+      .sweep-glow {
+        height: 130px;
       }
 
       .program-name {
-        font-size: 20px;
+        font-size: 24px;
+      }
+
+      .dashboard-header {
+        font-size: 26px;
       }
     }
   </style>
 </head>
 <body>
   <div class="splash-screen" id="splashScreen">
-    <div class="splash-inner">
+    <div class="radar-container">
       <div class="radar-circle">
         <div class="radar-ring ring1"></div>
         <div class="radar-ring ring2"></div>
         <div class="radar-ring ring3"></div>
-        <div class="crosshair-h"></div>
-        <div class="crosshair-v"></div>
+        <div class="crosshair-horizontal"></div>
+        <div class="crosshair-vertical"></div>
+        <div class="sweep-glow"></div>
         <div class="sweep"></div>
         <div class="center-dot"></div>
         <div class="program-name">BoardSense</div>
       </div>
+
       <div class="scan-text">SCANNING...</div>
-      <button onclick="enterDashboard()">ENTER DASHBOARD</button>
+
+      <div class="dashboard-enter">
+        <button onclick="enterDashboard()">ENTER DASHBOARD</button>
+      </div>
     </div>
   </div>
 
   <div class="dashboard" id="dashboard">
     <div class="dashboard-header">BoardSense Dashboard</div>
 
-<button id="voiceBtn" onclick="toggleVoice()">🔊 Voice ON</button>
+    <div class="top-controls">
+      <button id="voiceBtn" onclick="toggleVoice()">🔊 Voice ON</button>
+    </div>
 
-    
     <div class="panel">
       <h3>Scan Board</h3>
 
@@ -353,10 +422,9 @@
         id="imageInput"
         accept="image/*"
         class="hidden-input"
-        onchange="uploadImage()"
       />
 
-      <div class="top-actions">
+      <div class="file-row">
         <button onclick="document.getElementById('imageInput').click()">📸 Upload Scan</button>
       </div>
 
@@ -437,34 +505,30 @@
     let lastUploadedFilename = "";
     let lastPrediction = null;
     let lastSavedLabel = "";
-
-    
     let voiceEnabled = true;
 
-function toggleVoice() {
-  voiceEnabled = !voiceEnabled;
+    function speak(text) {
+      if (!voiceEnabled || !("speechSynthesis" in window)) return;
 
-  const btn = document.getElementById("voiceBtn");
-  btn.textContent = voiceEnabled ? "🔊 Voice ON" : "🔇 Voice OFF";
+      window.speechSynthesis.cancel();
 
-  if (voiceEnabled) {
-    speak("Voice enabled");
-  }
-}
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = "en-US";
+      u.rate = 1;
+      u.pitch = 1;
+      window.speechSynthesis.speak(u);
+    }
 
-    
-function speak(text) {
-  if (!voiceEnabled || !('speechSynthesis' in window)) return;
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      const btn = document.getElementById("voiceBtn");
+      btn.textContent = voiceEnabled ? "🔊 Voice ON" : "🔇 Voice OFF";
 
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "en-US";
-  u.rate = 1;
-  u.pitch = 1;
+      if (voiceEnabled) {
+        speak("Voice enabled");
+      }
+    }
 
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(u);
-}
-    
     function enterDashboard() {
       document.getElementById("splashScreen").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
@@ -477,9 +541,9 @@ function speak(text) {
 
       const g = (grade || "").toUpperCase();
       if (g === "HIGH") badge.classList.add("high");
-      if (g === "MEDIUM") badge.classList.add("medium");
-      if (g === "LOW") badge.classList.add("low");
-      if (g === "JUNK") badge.classList.add("junk");
+      else if (g === "MEDIUM") badge.classList.add("medium");
+      else if (g === "LOW") badge.classList.add("low");
+      else if (g === "JUNK") badge.classList.add("junk");
     }
 
     function renderLastPrediction() {
@@ -545,45 +609,34 @@ function speak(text) {
           action: data.action || "Review manually"
         };
 
-           if (data.ai_grade === "HIGH") {
-           speak("High value board detected");
-         } else if (data.ai_grade === "MEDIUM") {
-               speak("Medium grade board");
-         } else if (data.ai_grade === "LOW") {
-            speak("Low grade material");
-          } else if (data.ai_grade === "JUNK") {
-            speak("Discard board");
-          } else {
-             speak("Board classified");
+        if (data.ai_grade === "HIGH") {
+          setTimeout(() => speak("High value board detected"), 200);
+        } else if (data.ai_grade === "MEDIUM") {
+          setTimeout(() => speak("Medium grade board"), 200);
+        } else if (data.ai_grade === "LOW") {
+          setTimeout(() => speak("Low grade material"), 200);
+        } else if (data.ai_grade === "JUNK") {
+          setTimeout(() => speak("Discard board"), 200);
+        } else {
+          setTimeout(() => speak("Board classified"), 200);
         }
-        
-        
+
         lastSavedLabel = "";
         document.getElementById("result").innerText =
           "Confidence: " + (data.confidence || "N/A") +
           " | Action: " + (data.action || "Review manually");
 
-         lastPrediction = {
-  filename: data.filename || "",
-  ai_grade: data.ai_grade || "PENDING REVIEW",
-  confidence: data.confidence || "N/A",
-  action: data.action || "Review manually"
-};
-
-if (data.ai_grade === "HIGH") {
-  speak("High value board detected");
-} else if (data.ai_grade === "MEDIUM") {
-  speak("Medium grade board");
-} else if (data.ai_grade === "LOW") {
-  speak("Low grade material");
-} else if (data.ai_grade === "JUNK") {
-  speak("Discard board");
-} else {
-  speak("Board classified");
-}
-
-renderLastPrediction();
-await loadHistory();
+        renderLastPrediction();
+        await loadHistory();
+      } catch (err) {
+        status.innerText = "Upload failed: " + err.message;
+        setBadge("ERROR");
+      } finally {
+        setTimeout(() => {
+          scanBar.style.width = "0%";
+        }, 500);
+      }
+    }
 
     async function saveLabel(label) {
       const status = document.getElementById("labelStatus");
@@ -601,19 +654,20 @@ await loadHistory();
           },
           body: JSON.stringify({
             filename: lastUploadedFilename,
-            label: label.toLowerCase()
+            label: label
           })
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "Save failed");
+          throw new Error(data.detail || data.error || "Save label failed");
         }
 
-        lastSavedLabel = label.toUpperCase();
-        status.innerText = "Saved label: " + lastSavedLabel;
+        lastSavedLabel = label;
+        status.innerText = "Saved label: " + label;
         renderLastPrediction();
+        speak("Label saved as " + label);
         await loadTrainingStatus();
         await loadHistory();
       } catch (err) {
@@ -622,32 +676,43 @@ await loadHistory();
     }
 
     async function sendManualGrade() {
-      const gf = document.getElementById("gf").checked;
-      const dc = document.getElementById("dc").checked;
-      const ic = document.getElementById("ic").checked;
-      const pb = document.getElementById("pb").checked;
-      const hv = document.getElementById("hv").checked;
+      const result = document.getElementById("result");
 
-      let grade = "MEDIUM";
-      let reason = [];
+      const payload = {
+        gold_fingers: document.getElementById("gf").checked,
+        dense_chips: document.getElementById("dc").checked,
+        industrial_connectors: document.getElementById("ic").checked,
+        power_board: document.getElementById("pb").checked,
+        heavy: document.getElementById("hv").checked
+      };
 
-      if (gf) reason.push("Gold Fingers");
-      if (dc) reason.push("Dense Chips");
-      if (ic) reason.push("Industrial Connectors");
-      if (pb) reason.push("Power Board");
-      if (hv) reason.push("Heavy");
+      try {
+        const res = await fetch("/manual-grade", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
 
-      if ((gf && dc) || (gf && ic) || (dc && ic)) {
-        grade = "HIGH";
-      } else if (pb || hv) {
-        grade = "LOW";
-      } else if (!gf && !dc && !ic && !pb && !hv) {
-        grade = "JUNK";
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || data.error || "Manual grading failed");
+        }
+
+        setBadge(data.grade || "SYSTEM READY");
+        result.innerText =
+          "Manual Grade: " + (data.grade || "N/A") +
+          " | Reason: " + (data.reason || "No reason provided");
+
+        if (data.grade) {
+          speak("Manual grade " + data.grade);
+        }
+      } catch (err) {
+        result.innerText = "Manual grading failed: " + err.message;
+        setBadge("ERROR");
       }
-
-      setBadge(grade);
-      document.getElementById("result").innerText =
-        "Manual Grade: " + grade + (reason.length ? " | Signals: " + reason.join(", ") : "");
     }
 
     async function loadHistory() {
@@ -658,7 +723,7 @@ await loadHistory();
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "History failed");
+          throw new Error(data.detail || data.error || "History load failed");
         }
 
         if (!Array.isArray(data) || data.length === 0) {
@@ -666,14 +731,16 @@ await loadHistory();
           return;
         }
 
-        box.innerHTML = data.slice().reverse().map(item => {
-          return (
-            "<div style='margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid rgba(57,255,20,0.2);'>" +
-            "<strong>File:</strong> " + (item.filename || "Unknown") + "<br>" +
-            "<strong>Label:</strong> " + (item.label || "N/A") +
+        box.innerHTML = data
+          .slice()
+          .reverse()
+          .map(item =>
+            "<div style='margin-bottom:10px;'>" +
+            "<strong>" + (item.filename || "Unknown") + "</strong><br>" +
+            "Grade: " + (item.label || item.ai_grade || "N/A") +
             "</div>"
-          );
-        }).join("");
+          )
+          .join("");
       } catch (err) {
         box.innerHTML = "Failed to load history: " + err.message;
       }
@@ -695,7 +762,8 @@ await loadHistory();
         document.getElementById("countTotal").innerText = data.total ?? 0;
         document.getElementById("countReady").innerText = data.ready ? "YES" : "NO";
       } catch (err) {
-        document.getElementById("countReady").innerText = "ERROR";
+        document.getElementById("trainStatus").innerText =
+          "Training status failed: " + err.message;
       }
     }
 
@@ -707,7 +775,7 @@ await loadHistory();
       output.innerText = "Running train_model.py ...";
 
       try {
-        const res = await fetch("/train", {
+        const res = await fetch("/train-model", {
           method: "POST"
         });
 
@@ -717,17 +785,16 @@ await loadHistory();
           throw new Error(data.detail || data.error || "Training failed");
         }
 
-        status.innerText = data.message || "Training completed successfully";
-        output.innerText = data.output || "Training completed";
+        status.innerText = "Training completed successfully";
+        output.innerText = data.output || "Training complete";
+        speak("Training complete");
       } catch (err) {
         status.innerText = "Training failed";
         output.innerText = err.message;
       }
     }
 
-    loadTrainingStatus();
-    loadHistory();
-    renderLastPrediction();
+    document.getElementById("imageInput").addEventListener("change", uploadImage);
   </script>
 </body>
 </html>
