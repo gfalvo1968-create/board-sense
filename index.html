@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BoardSense</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -111,6 +109,7 @@
       color: #aaff9d;
       text-shadow: 0 0 8px rgba(57, 255, 20, 0.45);
       word-break: break-word;
+      white-space: pre-wrap;
     }
 
     .preview-card {
@@ -138,6 +137,7 @@
       padding: 14px;
       box-shadow: inset 0 0 12px rgba(57, 255, 20, 0.08);
       word-break: break-word;
+      white-space: pre-wrap;
     }
 
     .badge {
@@ -240,17 +240,9 @@
       border-radius: 50%;
     }
 
-    .ring1 {
-      inset: 20%;
-    }
-
-    .ring2 {
-      inset: 35%;
-    }
-
-    .ring3 {
-      inset: 48%;
-    }
+    .ring1 { inset: 20%; }
+    .ring2 { inset: 35%; }
+    .ring3 { inset: 48%; }
 
     .crosshair-horizontal,
     .crosshair-vertical {
@@ -342,21 +334,13 @@
     }
 
     @keyframes sweep {
-      from {
-        transform: translateX(-50%) rotate(0deg);
-      }
-      to {
-        transform: translateX(-50%) rotate(360deg);
-      }
+      from { transform: translateX(-50%) rotate(0deg); }
+      to { transform: translateX(-50%) rotate(360deg); }
     }
 
     @keyframes pulseText {
-      0%, 100% {
-        opacity: 0.7;
-      }
-      50% {
-        opacity: 1;
-      }
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
     }
 
     @media (max-width: 767px) {
@@ -417,12 +401,7 @@
     <div class="panel">
       <h3>Scan Board</h3>
 
-      <input
-        type="file"
-        id="imageInput"
-        accept="image/*"
-        class="hidden-input"
-      />
+      <input type="file" id="imageInput" accept="image/*" class="hidden-input" />
 
       <div class="file-row">
         <button onclick="document.getElementById('imageInput').click()">📸 Upload Scan</button>
@@ -509,9 +488,7 @@
 
     function speak(text) {
       if (!voiceEnabled || !("speechSynthesis" in window)) return;
-
       window.speechSynthesis.cancel();
-
       const u = new SpeechSynthesisUtterance(text);
       u.lang = "en-US";
       u.rate = 1;
@@ -523,10 +500,7 @@
       voiceEnabled = !voiceEnabled;
       const btn = document.getElementById("voiceBtn");
       btn.textContent = voiceEnabled ? "🔊 Voice ON" : "🔇 Voice OFF";
-
-      if (voiceEnabled) {
-        speak("Voice enabled");
-      }
+      if (voiceEnabled) speak("Voice enabled");
     }
 
     function enterDashboard() {
@@ -562,60 +536,83 @@
         "<strong>Saved Label:</strong> " + (lastSavedLabel || "None yet");
     }
 
-    aasync function uploadImage() {
-    const fileInput = document.getElementById("imageInput");
-    const file = fileInput.files[0];
-    const status = document.getElementById("uploadStatus");
-    const preview = document.getElementById("preview");
-    const scanBar = document.getElementById("scanBar");
+    async function uploadImage() {
+      const fileInput = document.getElementById("imageInput");
+      const file = fileInput.files[0];
+      const status = document.getElementById("uploadStatus");
+      const preview = document.getElementById("preview");
+      const scanBar = document.getElementById("scanBar");
 
-    if (!file) {
+      if (!file) {
         status.innerText = "📸 Please select a board image first";
         return;
-    }
+      }
 
-    preview.src = URL.createObjectURL(file);
-    preview.style.display = "block";
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = "block";
 
-    scanBar.style.width = "100%";
-    status.innerText = "SCANNING...";
-    setBadge("SCANNING");
+      scanBar.style.width = "100%";
+      status.innerText = "SCANNING...";
+      document.getElementById("labelStatus").innerText = "";
+      document.getElementById("result").innerText = "";
+      setBadge("SCANNING");
 
-    try {
+      try {
         const formData = new FormData();
         formData.append("file", file);
 
         const res = await fetch("/upload", {
-            method: "POST",
-            body: formData
+          method: "POST",
+          body: formData
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-            throw new Error(data.detail || data.error || "Upload failed");
+          throw new Error(data.detail || "Upload failed");
         }
 
+        lastUploadedFilename = data.filename || "";
         status.innerText = "Saved: " + (data.filename || "uploaded");
         setBadge(data.ai_grade || "PENDING REVIEW");
 
-        // Voice feedback
-        if (data.ai_grade === "HIGH") speak("High value board detected");
-        else if (data.ai_grade === "MEDIUM") speak("Medium grade board");
-        else if (data.ai_grade === "LOW") speak("Low grade material");
-        else if (data.ai_grade === "JUNK") speak("Discard board");
-        else speak("Board classified");
+        lastPrediction = {
+          filename: data.filename || "",
+          ai_grade: data.ai_grade || "PENDING REVIEW",
+          confidence: data.confidence || "N/A",
+          action: data.action || "Review manually"
+        };
 
-    } catch (err) {
+        if (data.ai_grade === "HIGH") {
+          setTimeout(() => speak("High value board detected"), 200);
+        } else if (data.ai_grade === "MEDIUM") {
+          setTimeout(() => speak("Medium grade board"), 200);
+        } else if (data.ai_grade === "LOW") {
+          setTimeout(() => speak("Low grade material"), 200);
+        } else if (data.ai_grade === "JUNK") {
+          setTimeout(() => speak("Discard board"), 200);
+        } else {
+          setTimeout(() => speak("Board classified"), 200);
+        }
+
+        lastSavedLabel = "";
+        document.getElementById("result").innerText =
+          "Confidence: " + (data.confidence || "N/A") +
+          " | Action: " + (data.action || "Review manually");
+
+        renderLastPrediction();
+        await loadHistory();
+      } catch (err) {
         status.innerText = "Upload failed: " + err.message;
         setBadge("ERROR");
-
-    } finally {
+      } finally {
         setTimeout(() => {
-            if (scanBar) scanBar.style.width = "0%";
+          if (scanBar) {
+            scanBar.style.width = "0%";
+          }
         }, 500);
+      }
     }
-}
 
     async function saveLabel(label) {
       const status = document.getElementById("labelStatus");
@@ -628,15 +625,18 @@
       try {
         const res = await fetch("/save-label", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             filename: lastUploadedFilename,
             label: label
           })
         });
 
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.detail || "Save label failed");
+        }
 
         lastSavedLabel = label;
         status.innerText = "Saved label: " + label;
@@ -650,8 +650,6 @@
     }
 
     async function sendManualGrade() {
-      const result = document.getElementById("result");
-
       const payload = {
         gold_fingers: document.getElementById("gf").checked,
         dense_chips: document.getElementById("dc").checked,
@@ -663,20 +661,18 @@
       try {
         const res = await fetch("/manual-grade", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "Manual grading failed");
+          throw new Error(data.detail || "Manual grading failed");
         }
 
         setBadge(data.grade || "SYSTEM READY");
-        result.innerText =
+        document.getElementById("result").innerText =
           "Manual Grade: " + (data.grade || "N/A") +
           " | Reason: " + (data.reason || "No reason provided");
 
@@ -684,7 +680,7 @@
           speak("Manual grade " + data.grade);
         }
       } catch (err) {
-        result.innerText = "Manual grading failed: " + err.message;
+        document.getElementById("result").innerText = "Manual grading failed: " + err.message;
         setBadge("ERROR");
       }
     }
@@ -697,7 +693,7 @@
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "History load failed");
+          throw new Error(data.detail || "History load failed");
         }
 
         if (!Array.isArray(data) || data.length === 0) {
@@ -726,7 +722,7 @@
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "Training status failed");
+          throw new Error(data.detail || "Training status failed");
         }
 
         document.getElementById("countHigh").innerText = data.high ?? 0;
@@ -756,10 +752,10 @@
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "Training failed");
+          throw new Error(data.detail || "Training failed");
         }
 
-        status.innerText = "Training completed successfully";
+        status.innerText = data.message || "Training completed successfully";
         output.innerText = data.output || "Training complete";
         speak("Training complete");
       } catch (err) {
@@ -769,6 +765,12 @@
     }
 
     document.getElementById("imageInput").addEventListener("change", uploadImage);
+
+    window.addEventListener("load", async () => {
+      await loadHistory();
+      await loadTrainingStatus();
+      renderLastPrediction();
+    });
   </script>
 </body>
 </html>
