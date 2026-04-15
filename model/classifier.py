@@ -1,45 +1,52 @@
-import os
-import tensorflow as tf
+from pathlib import Path
 import numpy as np
 from PIL import Image
+import tensorflow as tf
 
-# Base directory (safe for Railway)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-MODEL_PATH = os.path.join(BASE_DIR, "boardsense_model.h5")
-CLASS_NAMES_PATH = os.path.join(BASE_DIR, "class_names.txt")
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODEL_PATH = BASE_DIR / "model" / "boardsense_model.h5"
+CLASS_NAMES_PATH = BASE_DIR / "model" / "class_names.txt"
 IMG_SIZE = (128, 128)
 
-# Load class names
-try:
-    with open(CLASS_NAMES_PATH, "r", encoding="utf-8") as f:
-        class_names = [line.strip() for line in f.readlines() if line.strip()]
-except:
-    class_names = []
-
-# Load model safely
-try:
-    model = tf.keras.models.load_model(MODEL_PATH)
-except Exception as e:
-    print("Model load failed:", e)
-    model = None
+_model = None
+_class_names = None
 
 
-def predict_board_grade(image_path):
-    # If model not available → fallback
-    if model is None:
-        return "PENDING REVIEW", 0.0
+def load_model_and_classes():
+    global _model, _class_names
 
-    image = Image.open(image_path).convert("RGB")
-    image = image.resize(IMG_SIZE)
+    if _model is None:
+        if not MODEL_PATH.exists():
+            raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
+        _model = tf.keras.models.load_model(MODEL_PATH)
 
-    image_array = np.array(image) / 255.0
-    image_array = np.expand_dims(image_array, axis=0)
+    if _class_names is None:
+        if not CLASS_NAMES_PATH.exists():
+            raise FileNotFoundError(f"Class names file not found: {CLASS_NAMES_PATH}")
+        with CLASS_NAMES_PATH.open("r", encoding="utf-8") as f:
+            _class_names = [line.strip() for line in f if line.strip()]
 
-    predictions = model.predict(image_array, verbose=0)[0]
-    best_idx = int(np.argmax(predictions))
+    if not _class_names:
+        raise ValueError("No class names loaded")
 
-    best_label = class_names[best_idx] if class_names else "UNKNOWN"
-    confidence = float(predictions[best_idx])
+    return _model, _class_names
 
-    return best_label, round(confidence, 4)
+
+def preprocess_image(image_path: str):
+    img = Image.open(image_path).convert("RGB")
+    img = img.resize(IMG_SIZE)
+    arr = np.array(img, dtype=np.float32) / 255.0
+    arr = np.expand_dims(arr, axis=0)
+    return arr
+
+
+def predict_board_grade(image_path: str):
+    model, class_names = load_model_and_classes()
+    image_tensor = preprocess_image(image_path)
+
+    preds = model.predict(image_tensor, verbose=0)[0]
+    best_index = int(np.argmax(preds))
+    confidence = float(preds[best_index])
+    label = class_names[best_index].upper()
+
+    return label, round(confidence * 100, 2)
