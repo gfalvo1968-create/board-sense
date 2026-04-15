@@ -562,90 +562,60 @@
         "<strong>Saved Label:</strong> " + (lastSavedLabel || "None yet");
     }
 
-    async function uploadImage() {
-      const fileInput = document.getElementById("imageInput");
-      const file = fileInput.files[0];
-      const status = document.getElementById("uploadStatus");
-      const preview = document.getElementById("preview");
-      const scanBar = document.getElementById("scanBar");
+    aasync function uploadImage() {
+    const fileInput = document.getElementById("imageInput");
+    const file = fileInput.files[0];
+    const status = document.getElementById("uploadStatus");
+    const preview = document.getElementById("preview");
+    const scanBar = document.getElementById("scanBar");
 
-      if (!file) {
+    if (!file) {
         status.innerText = "📸 Please select a board image first";
         return;
-      }
+    }
 
-      } finally {
-    setTimeout(() => {
-        if (scanBar) {
-            scanBar.style.width = "0%";
-        }
-    }, 500);
-}
-      
-      
-      preview.src = URL.createObjectURL(file);
-      preview.style.display = "block";
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
 
-      scanBar.style.width = "100%";
-      status.innerText = "SCANNING...";
-      document.getElementById("labelStatus").innerText = "";
-      document.getElementById("result").innerText = "";
-      setBadge("SCANNING");
+    scanBar.style.width = "100%";
+    status.innerText = "SCANNING...";
+    setBadge("SCANNING");
 
-      const formData = new FormData();
-      formData.append("file", file);
+    try {
+        const formData = new FormData();
+        formData.append("file", file);
 
-      try {
         const res = await fetch("/upload", {
-          method: "POST",
-          body: formData
+            method: "POST",
+            body: formData
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || data.error || "Upload failed");
+            throw new Error(data.detail || data.error || "Upload failed");
         }
 
-        lastUploadedFilename = data.filename || "";
         status.innerText = "Saved: " + (data.filename || "uploaded");
         setBadge(data.ai_grade || "PENDING REVIEW");
 
-        lastPrediction = {
-          filename: data.filename || "",
-          ai_grade: data.ai_grade || "PENDING REVIEW",
-          confidence: data.confidence || "N/A",
-          action: data.action || "Review manually"
-        };
+        // Voice feedback
+        if (data.ai_grade === "HIGH") speak("High value board detected");
+        else if (data.ai_grade === "MEDIUM") speak("Medium grade board");
+        else if (data.ai_grade === "LOW") speak("Low grade material");
+        else if (data.ai_grade === "JUNK") speak("Discard board");
+        else speak("Board classified");
 
-        if (data.ai_grade === "HIGH") {
-          setTimeout(() => speak("High value board detected"), 200);
-        } else if (data.ai_grade === "MEDIUM") {
-          setTimeout(() => speak("Medium grade board"), 200);
-        } else if (data.ai_grade === "LOW") {
-          setTimeout(() => speak("Low grade material"), 200);
-        } else if (data.ai_grade === "JUNK") {
-          setTimeout(() => speak("Discard board"), 200);
-        } else {
-          setTimeout(() => speak("Board classified"), 200);
-        }
-
-        lastSavedLabel = "";
-        document.getElementById("result").innerText =
-          "Confidence: " + (data.confidence || "N/A") +
-          " | Action: " + (data.action || "Review manually");
-
-        renderLastPrediction();
-        await loadHistory();
-      } catch (err) {
+    } catch (err) {
         status.innerText = "Upload failed: " + err.message;
         setBadge("ERROR");
-      } finally {
+
+    } finally {
         setTimeout(() => {
-          scanBar.style.width = "0%";
+            if (scanBar) scanBar.style.width = "0%";
         }, 500);
-      }
     }
+}
 
     async function saveLabel(label) {
       const status = document.getElementById("labelStatus");
