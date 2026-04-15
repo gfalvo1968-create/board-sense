@@ -1,55 +1,66 @@
 import os
+from pathlib import Path
 import pandas as pd
 import tensorflow as tf
 from tensorflow.keras import layers, models
 from sklearn.model_selection import train_test_split
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "data")
-LABELS_FILE = os.path.join(BASE_DIR, "db", "labels.csv")
-MODEL_OUT = os.path.join(BASE_DIR, "model", "boardsense_model.h5")
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / "data" / "images"
+LABELS_FILE = BASE_DIR / "db" / "labels.csv"
+MODEL_OUT = BASE_DIR / "model" / "boardsense_model.h5"
+CLASS_NAMES_OUT = BASE_DIR / "model" / "class_names.txt"
 
 IMG_SIZE = (128, 128)
-BATCH_SIZE = 16
+BATCH_SIZE = 8
+EPOCHS = 8
 
-if not os.path.exists(LABELS_FILE):
-    print("labels.csv not found, creating empty dataset")
-    label_df = pd.DataFrame(columns=["filename", "label"])
-else:
-    label_df = pd.read_csv(LABELS_FILE)
+if not LABELS_FILE.exists():
+    raise ValueError("labels.csv not found")
 
-# keep only rows where image file actually exists
-label_df["filepath"] = label_df["filename"].apply(lambda x: os.path.join(DATA_DIR, "images", x))
-label_df = label_df[label_df["filepath"].apply(os.path.exists)]
+label_df = pd.read_csv(LABELS_FILE)
+
+if "filename" not in label_df.columns or "label" not in label_df.columns:
+    raise ValueError("labels.csv must contain filename and label columns")
+
+label_df["filename"] = label_df["filename"].astype(str).str.strip()
+label_df["label"] = label_df["label"].astype(str).str.strip().str.lower()
+
+label_df["filepath"] = label_df["filename"].apply(lambda x: str(DATA_DIR / x))
+label_df = label_df[label_df["filepath"].apply(os.path.exists)].copy()
+
+if len(label_df) < 8:
+    raise ValueError("Need at least 8 labeled images to train the model")
+
+if label_df["label"].nunique() < 2:
+    raise ValueError("Need at least 2 different label classes to train the model")
 
 class_names = sorted(label_df["label"].unique().tolist())
 class_to_index = {name: i for i, name in enumerate(class_names)}
 label_df["label_index"] = label_df["label"].map(class_to_index)
 
-if len(label_df) < 3:
-    raise ValueError("Need at least 3 labeled images to train the model.")
-
-if label_df["label"].nunique() < 2:
-    raise ValueError("Need at least 2 different label classes to train the model.")
+test_size = 0.3 if len(label_df) >= 10 else 0.4
 
 train_df, val_df = train_test_split(
     label_df,
-    test_size=0.3,  # or 0.4
+    test_size=test_size,
     random_state=42,
     stratify=label_df["label_index"]
 )
 
+
 def load_image(path, label):
     image = tf.io.read_file(path)
-    image = tf.image.decode_jpeg(image, channels=3)
+    image = tf.image.decode_image(image, channels=3, expand_animations=False)
     image = tf.image.resize(image, IMG_SIZE)
-    image = image / 255.0
+    image = tf.cast(image, tf.float32) / 255.0
     return image, label
+
 
 train_ds = tf.data.Dataset.from_tensor_slices(
     (train_df["filepath"].values, train_df["label_index"].values)
 )
-train_ds = train_ds.map(load_image).shuffle(200).batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
+train_ds = train_ds.map(load_image).shuffle(100).batch(BATCH_SIZE).prefetch(tf.data.AUTOTUNE)
 
 val_ds = tf.data.Dataset.from_tensor_slices(
     (val_df["filepath"].values, val_df["label_index"].values)
@@ -76,14 +87,21 @@ model.compile(
     metrics=["accuracy"]
 )
 
-model.fit(train_ds, validation_data=val_ds, epochs=8)
+history = model.fit(
+    train_ds,
+    validation_data=val_ds,
+    epochs=EPOCHS,
+    verbose=1
+)
 
-os.makedirs(os.path.dirname(MODEL_OUT), exist_ok=True)
+MODEL_OUT.parent.mkdir(parents=True, exist_ok=True)
 model.save(MODEL_OUT)
 
-with open(os.path.join(os.path.dirname(MODEL_OUT), "class_names.txt"), "w", encoding="utf-8") as f:
+with CLASS_NAMES_OUT.open("w", encoding="utf-8") as f:
     for name in class_names:
         f.write(name + "\n")
 
-print("Model saved to", MODEL_OUT)
-print("Classes:", class_names)
+print(f"Model saved to {MODEL_OUT}")
+print(f"Classes: {class_names}")
+print(f"Final train accuracy: {history.history['accuracy'][-1]:.4f}")
+print(f"Final val accuracy: {history.history['val_accuracy'][-1]:.4f}")
