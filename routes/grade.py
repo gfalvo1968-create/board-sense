@@ -76,7 +76,7 @@ async def upload(file: UploadFile = File(...)):
     ensure_csv_headers()
 
     suffix = Path(file.filename).suffix.lower()
-    if suffix not in [".jpg", ".jpeg", ".png", ".webp"]:
+    if suffix not in [".jpg", ".jpeg", ".png"]:
         raise HTTPException(status_code=400, detail="Unsupported image type")
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
@@ -85,6 +85,23 @@ async def upload(file: UploadFile = File(...)):
 
     with save_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    try:
+        ai_grade, confidence, action = predict_board_grade(str(save_path))
+    except Exception as e:
+        ai_grade = "PENDING REVIEW"
+        confidence = 0.0
+        action = f"Prediction unavailable: {e}"
+
+    append_scan(safe_name, ai_grade, confidence, action)
+
+    return {
+        "filename": safe_name,
+        "image_url": f"/data/images/{safe_name}",
+        "ai_grade": ai_grade,
+        "confidence": confidence,
+        "action": action
+    }
 
 @router.post("/upload")
 async def upload(file: UploadFile = File(...)):
