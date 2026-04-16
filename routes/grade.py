@@ -253,3 +253,8 @@ def train_model():
         "message": "Training completed successfully",
         "output": output.strip() or "Training completed"
     }
+
+@router.get("/health")
+def health():
+    return {"status": "running"}
+
