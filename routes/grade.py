@@ -16,12 +16,12 @@ DB_DIR = BASE_DIR / "db"
 MODEL_DIR = BASE_DIR / "model"
 TRAIN_SCRIPT = BASE_DIR / "train_model.py"
 
+LABELS_CSV = DB_DIR / "labels.csv"
+SCANS_CSV = DB_DIR / "scans.csv"
+
 IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 DB_DIR.mkdir(parents=True, exist_ok=True)
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
-
-LABELS_CSV = DB_DIR / "labels.csv"
-SCANS_CSV = DB_DIR / "scans.csv"
 
 router = APIRouter()
 
@@ -77,7 +77,7 @@ async def upload(file: UploadFile = File(...)):
 
     suffix = Path(file.filename).suffix.lower()
     if suffix not in [".jpg", ".jpeg", ".png", ".webp"]:
-        raise HTTPException(status_code=400, detail="Unsupported image format")
+        raise HTTPException(status_code=400, detail="Unsupported image type")
 
     timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
     safe_name = f"{timestamp}_{Path(file.filename).name}"
@@ -87,21 +87,21 @@ async def upload(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     try:
-    ai_grade, confidence, action = predict_board_grade(str(save_path))
-except Exception as e:
-    ai_grade = "PENDING REVIEW"
-    confidence = 0.0
-    action = f"Prediction unavailable: {e}"
+        ai_grade, confidence, action = predict_board_grade(str(save_path))
+        except Exception as e:
+        ai_grade = "PENDING REVIEW"
+        confidence = 0.0
+        action = f"Prediction unavailable: {e}"
 
-append_scan(safe_name, ai_grade, confidence, action)
+    append_scan(safe_name, ai_grade, confidence, action)
 
-return {
-    "filename": safe_name,
-    "image_url": f"/data/images/{safe_name}",
-    "ai_grade": ai_grade,
-    "confidence": confidence,
-    "action": action
-}
+    return {
+        "filename": safe_name,
+        "image_url": f"/data/images/{safe_name}",
+        "ai_grade": ai_grade,
+        "confidence": confidence,
+        "action": action
+    }
 
 
 @router.post("/save-label")
@@ -134,15 +134,19 @@ def manual_grade(payload: ManualGradeRequest):
     if payload.gold_fingers:
         score += 3
         reasons.append("gold fingers")
+
     if payload.dense_chips:
         score += 2
         reasons.append("dense chips")
+
     if payload.industrial_connectors:
         score += 2
         reasons.append("industrial connectors")
+
     if payload.power_board:
         score -= 2
         reasons.append("power board")
+
     if payload.heavy:
         score -= 1
         reasons.append("heavy components")
@@ -205,7 +209,7 @@ def training_status():
         "low": counts["low"],
         "junk": counts["junk"],
         "total": total,
-        "ready": total >= 8 and sum(1 for v in counts.values() if v > 0) >= 2
+        "ready": total >= 8
     }
 
 
@@ -224,7 +228,10 @@ def train_model():
     output = (result.stdout or "") + ("\n" + result.stderr if result.stderr else "")
 
     if result.returncode != 0:
-        raise HTTPException(status_code=500, detail=output.strip() or "Training failed")
+        raise HTTPException(
+            status_code=500,
+            detail=output.strip() or "Training failed"
+        )
 
     return {
         "message": "Training completed successfully",
