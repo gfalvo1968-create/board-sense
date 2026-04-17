@@ -129,7 +129,7 @@ def save_label(payload: SaveLabelRequest):
     if label not in {"high", "medium", "low", "junk"}:
         raise HTTPException(status_code=400, detail="Invalid label")
 
-    def append_label(filename: str, label: str):
+def append_label(filename: str, label: str):
     ensure_csv_headers()
     with LABELS_CSV.open("a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
