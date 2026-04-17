@@ -129,12 +129,55 @@ def save_label(payload: SaveLabelRequest):
     if label not in {"high", "medium", "low", "junk"}:
         raise HTTPException(status_code=400, detail="Invalid label")
 
-    append_label(filename, label)
+    def append_label(filename: str, label: str):
+    ensure_csv_headers()
+    with LABELS_CSV.open("a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([filename, label.lower()])
+
+
+    def estimate_value(grade: str):
+        values = {
+            "HIGH": 15.0,
+            "MEDIUM": 7.0,
+            "LOW": 2.0,
+            "JUNK": 0.5,
+            "PENDING REVIEW": 0.0
+    }
+        return values.get(grade, 0.0)
+
+
+@router.post("/upload")
+async def upload(file: UploadFile = File(...)):
+    ensure_csv_headers()
+
+    suffix = Path(file.filename).suffix.lower()
+    if suffix not in [".jpg", ".jpeg", ".png"]:
+        raise HTTPException(status_code=400, detail="Unsupported image type")
+
+    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    safe_name = f"{timestamp}_{Path(file.filename).name}"
+    save_path = IMAGES_DIR / safe_name
+
+    with save_path.open("wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    try:
+        ai_grade, confidence, action = predict_board_grade(str(save_path))
+    except Exception as e:
+        ai_grade = "PENDING REVIEW"
+        confidence = 0.0
+        action = f"Prediction unavailable: {e}"
+
+    append_scan(safe_name, ai_grade, confidence, action)
 
     return {
-        "message": "Label saved",
-        "filename": filename,
-        "label": label
+        "filename": safe_name,
+        "image_url": f"/data/images/{safe_name}",
+        "ai_grade": ai_grade,
+        "confidence": confidence,
+        "action": action,
+        "value_estimate": estimate_value(ai_grade)
     }
 
 
