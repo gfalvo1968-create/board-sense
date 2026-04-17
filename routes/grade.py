@@ -70,6 +70,17 @@ def append_label(filename: str, label: str):
         writer = csv.writer(f)
         writer.writerow([filename, label.lower()])
 
+def estimate_value(grade: str):
+    values = {
+        "HIGH": 15.0,
+        "MEDIUM": 7.0,
+        "LOW": 2.0,
+        "JUNK": 0.5,
+        "PENDING REVIEW": 0.0
+    }
+    return values.get(grade, 0.0)
+
+
 
 @router.post("/upload")
 async def upload(file: UploadFile = File(...)):
