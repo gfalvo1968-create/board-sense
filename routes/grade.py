@@ -103,16 +103,6 @@ async def upload(file: UploadFile = File(...)):
         "action": action
     }
 
-    append_scan(safe_name, ai_grade, confidence, action)
-
-    return {
-        "filename": safe_name,
-        "image_url": f"/data/images/{safe_name}",
-        "ai_grade": ai_grade,
-        "confidence": confidence,
-        "action": action
-    }
-
 
 @router.post("/save-label")
 def save_label(payload: SaveLabelRequest):
