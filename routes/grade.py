@@ -112,6 +112,7 @@ async def upload(file: UploadFile = File(...)):
         "ai_grade": ai_grade,
         "confidence": confidence,
         "action": action
+        "value_estimate": estimate_value(ai_grade), 
     }
 
 
