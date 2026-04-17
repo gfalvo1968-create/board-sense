@@ -6,8 +6,8 @@ import csv
 import shutil
 import subprocess
 import sys
+from ml.classifier import predict_board_grade
 
-from model.classifier import predict_board_grade
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
