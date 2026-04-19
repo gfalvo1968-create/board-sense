@@ -26,9 +26,6 @@ def load_model_and_classes():
         with CLASS_NAMES_PATH.open("r", encoding="utf-8") as f:
             _class_names = [line.strip() for line in f if line.strip()]
 
-    if not _class_names:
-        raise ValueError("No class names loaded")
-
     return _model, _class_names
 
 
@@ -42,16 +39,11 @@ def preprocess_image(image_path: str):
 
 def predict_board_grade(image_path: str):
     model, class_names = load_model_and_classes()
-    image_tensor = preprocess_image(image_path)
+    arr = preprocess_image(image_path)
 
-    preds = model.predict(image_tensor, verbose=0)[0]
-    best_index = int(np.argmax(preds))
-    confidence = round(float(preds[best_index]) * 100, 2)
-    label = class_names[best_index].upper()
+    preds = model.predict(arr, verbose=0)[0]
+    idx = int(np.argmax(preds))
+    confidence = float(preds[idx])
+    grade = class_names[idx].upper()
 
-    if confidence >= 80:
-        return label, confidence, f"Predicted as {label}"
-    elif confidence >= 60:
-        return label, confidence, f"Low confidence prediction: {label}"
-    else:
-        return "PENDING REVIEW", confidence, "Unseen or uncertain board, review manually"
+    return grade, round(confidence, 4), f"Predicted as {grade}"
