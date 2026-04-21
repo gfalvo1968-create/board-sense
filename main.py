@@ -10,6 +10,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE_DIR))
 
+print("PYTHON PATH:", sys.path)
+print("FILES IN BASE:", list(BASE_DIR.iterdir()))
+
 from routes.grade import router as grade_router
 
 BASE_DIR = Path(__file__).resolve().parent
