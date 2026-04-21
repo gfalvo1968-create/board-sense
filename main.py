@@ -4,7 +4,11 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import sys
 
-sys.path.append(str(Path(__file__).resolve().parent))
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(BASE_DIR))
 
 from routes.grade import router as grade_router
 
