@@ -22,17 +22,25 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 LABELS_CSV = DB_DIR / "labels.csv"
 SCANS_CSV = DB_DIR / "scans.csv"
 
-CLASSIFIER_PATH = BASE_DIR / "ml" / "classifier.py"
-if not CLASSIFIER_PATH.exists():
-    raise FileNotFoundError(f"Missing classifier file: {CLASSIFIER_PATH}")
+classifier_module = None
 
-spec = importlib.util.spec_from_file_location("classifier", CLASSIFIER_PATH)
-if spec is None or spec.loader is None:
-    raise ImportError(f"Could not load spec for {CLASSIFIER_PATH}")
+def get_predict_board_grade():
+    global classifier_module
 
-classifier_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(classifier_module)
-predict_board_grade = classifier_module.predict_board_grade
+    if classifier_module is None:
+        classifier_path = BASE_DIR / "ml" / "classifier.py"
+
+        if not classifier_path.exists():
+            raise FileNotFoundError(f"Missing classifier file: {classifier_path}")
+
+        spec = importlib.util.spec_from_file_location("classifier", classifier_path)
+        if spec is None or spec.loader is None:
+            raise ImportError(f"Could not load spec for {classifier_path}")
+
+        classifier_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(classifier_module)
+
+    return classifier_module.predict_board_grade
 
 router = APIRouter()
 
