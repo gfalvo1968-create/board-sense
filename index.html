@@ -678,6 +678,19 @@
       if (voiceEnabled) speak("Voice enabled");
     }
 
+     const sponsorData = {
+       name: "Mike's Metal Yard",
+       tagline: "Fast payouts • Honest grading",
+       address: "123 Main St, Scranton, PA",
+       phone: "(555) 555-5555",
+       directions: "https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA",
+       phoneLink: "tel:5555555555",
+       reviews: [
+        "Quick unload and fair prices.",
+        "Good people, easy in and out."
+      ]
+     };
+    
     function enterDashboard() {
       document.getElementById("splashScreen").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
