@@ -117,7 +117,8 @@ async def upload(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     try:
-        ai_grade, confidence, action = predict_board_grade(str(save_path))
+        predict_board_grade = get_predict_board_grade()
+ai_grade, confidence, action = predict_board_grade(str(save_path))
     except Exception as e:
         ai_grade = "PENDING REVIEW"
         confidence = 0.0
