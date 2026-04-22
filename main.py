@@ -4,18 +4,15 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import sys
 
-import sys
-from pathlib import Path
-
 BASE_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(BASE_DIR))
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
 
 print("PYTHON PATH:", sys.path)
 print("FILES IN BASE:", list(BASE_DIR.iterdir()))
 
 from routes.grade import router as grade_router
 
-BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 IMAGES_DIR = DATA_DIR / "images"
 DB_DIR = BASE_DIR / "db"
@@ -29,7 +26,6 @@ app = FastAPI(title="BoardSense")
 
 app.mount("/data", StaticFiles(directory=str(DATA_DIR)), name="data")
 app.include_router(grade_router)
-
 
 @app.get("/", response_class=HTMLResponse)
 def home():
