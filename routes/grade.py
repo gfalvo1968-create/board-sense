@@ -1,5 +1,12 @@
 from pathlib import Path
 import sys
+import csv
+import shutil
+import subprocess
+from datetime import datetime
+
+from fastapi import APIRouter, UploadFile, File, HTTPException
+from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ML_DIR = BASE_DIR / "ml"
@@ -9,8 +16,6 @@ if str(ML_DIR) not in sys.path:
 
 from classifier import predict_board_grade
 
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 IMAGES_DIR = DATA_DIR / "images"
 DB_DIR = BASE_DIR / "db"
