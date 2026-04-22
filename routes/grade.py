@@ -1,13 +1,14 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
-from pydantic import BaseModel
 from pathlib import Path
-from datetime import datetime
-import csv
-import shutil
-import subprocess
 import sys
 
-from ml.classifier import predict_board_grade
+BASE_DIR = Path(__file__).resolve().parent.parent
+ML_DIR = BASE_DIR / "ml"
+
+if str(ML_DIR) not in sys.path:
+    sys.path.insert(0, str(ML_DIR))
+
+from classifier import predict_board_grade
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
