@@ -1,21 +1,14 @@
 from pathlib import Path
-import sys
 import csv
 import shutil
 import subprocess
+import importlib.util
 from datetime import datetime
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-ML_DIR = BASE_DIR / "ml"
-
-if str(ML_DIR) not in sys.path:
-    sys.path.insert(0, str(ML_DIR))
-
-from classifier import predict_board_grade
-
 DATA_DIR = BASE_DIR / "data"
 IMAGES_DIR = DATA_DIR / "images"
 DB_DIR = BASE_DIR / "db"
@@ -28,6 +21,18 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 
 LABELS_CSV = DB_DIR / "labels.csv"
 SCANS_CSV = DB_DIR / "scans.csv"
+
+CLASSIFIER_PATH = BASE_DIR / "ml" / "classifier.py"
+if not CLASSIFIER_PATH.exists():
+    raise FileNotFoundError(f"Missing classifier file: {CLASSIFIER_PATH}")
+
+spec = importlib.util.spec_from_file_location("classifier", CLASSIFIER_PATH)
+if spec is None or spec.loader is None:
+    raise ImportError(f"Could not load spec for {CLASSIFIER_PATH}")
+
+classifier_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(classifier_module)
+predict_board_grade = classifier_module.predict_board_grade
 
 router = APIRouter()
 
