@@ -4,9 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import sys
 
-import os
 print("PYTHON PATH:", sys.path)
-print("FILES IN BASE:", list(BASE_DIR.iterdir()))
+
 
 BASE_DIR = Path(__file__).resolve().parent
 if str(BASE_DIR) not in sys.path:
