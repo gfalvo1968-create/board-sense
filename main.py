@@ -4,6 +4,9 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import sys
 
+import os
+print("ML FOLDER CONTENTS:", os.listdir("/app/ml"))
+
 BASE_DIR = Path(__file__).resolve().parent
 if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
