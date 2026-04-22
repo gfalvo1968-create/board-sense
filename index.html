@@ -439,6 +439,82 @@
       .dashboard-header {
         font-size: 26px;
       }
+      .radar-ad-box {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  padding: 10px 14px;
+  border: 1px solid #39ff14;
+  border-radius: 12px;
+  background: rgba(0, 20, 0, 0.82);
+  color: #39ff14;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(57,255,20,0.45);
+  z-index: 6;
+  min-width: 160px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.sponsor-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 10, 0, 0.86);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+
+.sponsor-card {
+  width: 90%;
+  max-width: 360px;
+  background: #001a00;
+  border: 2px solid #39ff14;
+  border-radius: 18px;
+  padding: 20px;
+  color: #39ff14;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(57,255,20,0.55);
+}
+
+.sponsor-card h2 {
+  margin: 0 0 8px;
+}
+
+.tagline {
+  margin: 0 0 14px;
+  opacity: 0.85;
+}
+
+.sponsor-info p {
+  margin: 6px 0;
+}
+
+.sponsor-buttons a,
+.sponsor-card button {
+  display: inline-block;
+  margin: 6px;
+  padding: 10px 14px;
+  border: 1px solid #39ff14;
+  border-radius: 10px;
+  background: transparent;
+  color: #39ff14;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.review {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+    
     }
   </style>
 </head>
@@ -876,7 +952,45 @@
       await loadHistory();
       await loadTrainingStatus();
       renderLastPrediction();
+    
+    ...your last section of code...
+
+<!-- SPONSOR POPUP -->
+<div id="sponsorOverlay" class="sponsor-overlay hidden">
+  <div class="sponsor-card">
+
+    <h2>Mike's Metal Yard</h2>
+    <p class="tagline">Fast payouts • Honest grading</p>
+
+    <div class="sponsor-info">
+      <p>📍 123 Main St, Scranton, PA</p>
+      <p>📞 (555) 555-5555</p>
+    </div>
+
+    <div class="sponsor-buttons">
+      <a href="https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA" target="_blank">
+        Get Directions
+      </a>
+      <a href="tel:5555555555">
+        Call Now
+      </a>
+    </div>
+
+    <div class="reviews">
+      <div class="review">“Quick unload and fair prices.”</div>
+      <div class="review">“Good people, easy in and out.”</div>
+    </div>
+
+    <button onclick="closeSponsor()">Close</button>
+
+  </div>
+</div>
+
+</body>
+</html>
+    
     });
+    
   </script>
 </body>
 </html>
