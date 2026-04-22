@@ -5,7 +5,8 @@ from pathlib import Path
 import sys
 
 import os
-print("ML FOLDER CONTENTS:", os.listdir("/app/ml"))
+print("PYTHON PATH:", sys.path)
+print("FILES IN BASE:", list(BASE_DIR.iterdir()))
 
 BASE_DIR = Path(__file__).resolve().parent
 if str(BASE_DIR) not in sys.path:
