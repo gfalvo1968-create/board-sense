@@ -530,13 +530,16 @@
     }
 
     function enterDashboard() {
-      document.getElementById("splashScreen").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-      closeSponsor();
-      loadHistory();
-      loadTrainingStatus();
-      renderLastPrediction();
-    }
+  document.getElementById("splashScreen").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+
+  // 🔥 force kill any popup
+  document.getElementById("sponsorOverlay").classList.add("hidden");
+
+  loadHistory();
+  loadTrainingStatus();
+  renderLastPrediction();
+}
 
     function openSponsor() {
       document.getElementById("sponsorOverlay").classList.remove("hidden");
