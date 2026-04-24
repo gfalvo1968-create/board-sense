@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BoardSense</title>
+
   <style>
     * { box-sizing: border-box; }
 
@@ -14,199 +15,9 @@
       color: #39ff14;
     }
 
-    .splash-screen,
-    .dashboard {
-      width: 100%;
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    .dashboard {
-      display: none;
-    }
-
-    .dashboard-header {
-      text-align: center;
-      font-size: 34px;
-      font-weight: bold;
-      margin: 10px 0 24px;
-      text-shadow: 0 0 18px rgba(57, 255, 20, 0.75);
-    }
-
-    .top-controls {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 10px;
-    }
-
-    .panel {
-      border: 2px solid #39ff14;
-      border-radius: 22px;
-      padding: 22px;
-      margin-bottom: 24px;
-      background: rgba(0, 30, 0, 0.45);
-      box-shadow: 0 0 16px rgba(57, 255, 20, 0.25);
-    }
-
-    h3 {
-      margin: 0 0 14px;
-      font-size: 22px;
-      text-shadow: 0 0 10px rgba(57, 255, 20, 0.45);
-    }
-
-    button {
-      border: 2px solid #39ff14;
-      border-radius: 14px;
-      padding: 10px 18px;
-      background: transparent;
-      color: #39ff14;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(57, 255, 20, 0.28);
-      transition: transform 0.08s ease, box-shadow 0.2s ease;
-    }
-
-    button:hover {
-      box-shadow: 0 0 16px rgba(57, 255, 20, 0.45);
-    }
-
-    button:active {
-      transform: scale(0.98);
-    }
-
-    #voiceBtn {
-      min-width: 180px;
-    }
-
-    .hidden-input {
-      display: none;
-    }
-
-    .file-row,
-    .label-buttons,
-    .action-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    #scanBar {
-      width: 0%;
-      height: 10px;
-      border-radius: 10px;
-      background: #39ff14;
-      margin-top: 14px;
-      box-shadow: 0 0 12px rgba(57, 255, 20, 0.55);
-      transition: width 0.35s ease;
-    }
-
-    .status {
-      margin-top: 14px;
-      min-height: 24px;
-      color: #aaff9d;
-      text-shadow: 0 0 8px rgba(57, 255, 20, 0.45);
-      word-break: break-word;
-      white-space: pre-wrap;
-    }
-
-    .preview-card {
-      margin-top: 16px;
-    }
-
-    #preview {
-      display: none;
-      width: 100%;
-      max-width: 340px;
-      border-radius: 14px;
-      border: 1px solid rgba(57, 255, 20, 0.45);
-      box-shadow: 0 0 14px rgba(57, 255, 20, 0.18);
-    }
-
-    .label-section {
-      margin-top: 20px;
-    }
-
-    .result-box {
-      margin-top: 16px;
-      min-height: 56px;
-      border: 1px solid rgba(57, 255, 20, 0.45);
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: inset 0 0 12px rgba(57, 255, 20, 0.08);
-      word-break: break-word;
-      white-space: pre-wrap;
-    }
-
-    .badge {
-      display: inline-block;
-      border: 2px solid #39ff14;
-      border-radius: 999px;
-      padding: 10px 18px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      box-shadow: 0 0 12px rgba(57, 255, 20, 0.25);
-    }
-
-    .badge.high {
-      color: #39ff14;
-    }
-
-    .badge.medium {
-      color: #d7ff4a;
-      border-color: #d7ff4a;
-      box-shadow: 0 0 12px rgba(215, 255, 74, 0.3);
-    }
-
-    .badge.low {
-      color: #7de3ff;
-      border-color: #7de3ff;
-      box-shadow: 0 0 12px rgba(125, 227, 255, 0.3);
-    }
-
-    .badge.junk {
-      color: #ff6b6b;
-      border-color: #ff6b6b;
-      box-shadow: 0 0 12px rgba(255, 107, 107, 0.3);
-    }
-
-    .check-grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .check-card {
-      border: 1px solid rgba(57, 255, 20, 0.28);
-      border-radius: 14px;
-      padding: 14px 16px;
-    }
-
-    .check-card label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 16px;
-    }
-
-    .check-card input[type="checkbox"] {
-      width: 22px;
-      height: 22px;
-    }
-
-    .counter-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 14px;
-    }
-
-    .counter-card {
-      border: 1px solid rgba(57, 255, 20, 0.28);
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 18px;
+    .hidden {
+      display: none !important;
+      pointer-events: none !important;
     }
 
     .splash-screen {
@@ -215,6 +26,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      padding: 20px;
     }
 
     .radar-container {
@@ -229,42 +41,54 @@
       border-radius: 50%;
       margin: 0 auto;
       position: relative;
-      border: 2px solid rgba(57, 255, 20, 0.6);
-      box-shadow: 0 0 24px rgba(57, 255, 20, 0.25);
+      border: 2px solid rgba(57,255,20,0.7);
+      box-shadow: 0 0 24px rgba(57,255,20,0.35);
       overflow: hidden;
     }
-     .radar-ad-box {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 12px;
-  border: 1px solid #39ff14;
-  border-radius: 12px;
-  background: rgba(0, 20, 0, 0.82);
-  color: #39ff14;
-  font-weight: 700;
-  font-size: 14px;
-  box-shadow: 0 0 10px rgba(57,255,20,0.45);
-  z-index: 9999;
-  pointer-events: auto;
-  cursor: pointer;
-}
-    
-     .radar-ring {
+
+    .radar-ad-box {
       position: absolute;
-      border: 1px solid rgba(57, 255, 20, 0.35);
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 12px;
+      border: 1px solid #39ff14;
+      border-radius: 12px;
+      background: rgba(0,20,0,0.88);
+      color: #39ff14;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 0 12px rgba(57,255,20,0.55);
+      z-index: 10001;
+      cursor: pointer;
+      pointer-events: auto;
+      white-space: nowrap;
+    }
+
+    .radar-ring {
+      position: absolute;
+      border: 1px solid rgba(57,255,20,0.35);
       border-radius: 50%;
-   }
+      pointer-events: none;
+    }
 
     .ring1 { inset: 20%; }
     .ring2 { inset: 35%; }
     .ring3 { inset: 48%; }
 
     .crosshair-horizontal,
+    .crosshair-vertical,
+    .sweep,
+    .sweep-glow,
+    .center-dot,
+    .program-name {
+      pointer-events: none;
+    }
+
+    .crosshair-horizontal,
     .crosshair-vertical {
       position: absolute;
-      background: rgba(57, 255, 20, 0.35);
+      background: rgba(57,255,20,0.35);
     }
 
     .crosshair-horizontal {
@@ -272,7 +96,6 @@
       left: 0;
       width: 100%;
       height: 1px;
-      transform: translateY(-50%);
     }
 
     .crosshair-vertical {
@@ -280,7 +103,31 @@
       top: 0;
       width: 1px;
       height: 100%;
+    }
+
+    .sweep,
+    .sweep-glow {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform-origin: bottom center;
+      animation: sweep 2.4s linear infinite;
+    }
+
+    .sweep {
+      width: 2px;
+      height: 160px;
+      background: rgba(57,255,20,0.9);
+      box-shadow: 0 0 16px rgba(57,255,20,0.8);
+    }
+
+    .sweep-glow {
+      width: 160px;
+      height: 160px;
       transform: translateX(-50%);
+      background: conic-gradient(from 180deg, rgba(57,255,20,0), rgba(57,255,20,0.24), rgba(57,255,20,0));
+      filter: blur(8px);
+      border-radius: 0 0 160px 160px;
     }
 
     .center-dot {
@@ -292,136 +139,199 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
-    }
-
-    .sweep-glow,
-    .sweep {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform-origin: bottom center;
-      pointer-events: none;
-    }
-
-    .sweep-glow {
-      width: 160px;
-      height: 160px;
-      background: conic-gradient(from 180deg, rgba(57,255,20,0.0), rgba(57,255,20,0.18), rgba(57,255,20,0.0));
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      border-radius: 0 0 160px 160px;
-      animation: sweep 2.4s linear infinite;
-      filter: blur(8px);
-    }
-
-    .sweep {
-      width: 2px;
-      height: 160px;
-      background: rgba(57, 255, 20, 0.85);
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      animation: sweep 2.4s linear infinite;
-      box-shadow: 0 0 16px rgba(57, 255, 20, 0.8);
+      box-shadow: 0 0 14px rgba(57,255,20,0.9);
     }
 
     .program-name {
       position: absolute;
       left: 50%;
-      top: 72%;
+      top: 70%;
       transform: translate(-50%, -50%);
-      font-size: 28px;
+      font-size: 34px;
       font-weight: bold;
-      text-shadow: 0 0 18px rgba(57, 255, 20, 0.75);
+      text-shadow: 0 0 18px rgba(57,255,20,0.9);
       white-space: nowrap;
     }
 
-  
-    /* Overlay background */
-.sponsor-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 10, 0, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-/* Hide class */
-.hidden {
-  display: none;
-}
-
-/* Card */
-.sponsor-card {
-  background: #001a00;
-  border: 2px solid #39ff14;
-  border-radius: 18px;
-  padding: 20px;
-  width: 90%;
-  max-width: 350px;
-  color: #39ff14;
-  text-align: center;
-  box-shadow: 0 0 20px #39ff14;
-}
-
-/* Headline */
-.sponsor-card h2 {
-  margin-bottom: 5px;
-}
-
-/* Tagline */
-.tagline {
-  font-size: 14px;
-  opacity: 0.8;
-  margin-bottom: 15px;
-}
-
-/* Buttons */
-.sponsor-buttons a {
-  display: inline-block;
-  margin: 6px;
-  padding: 10px 14px;
-  border: 1px solid #39ff14;
-  border-radius: 10px;
-  text-decoration: none;
-  color: #39ff14;
-  font-weight: bold;
-}
-
-/* Reviews */
-.review {
-  margin-top: 10px;
-  font-size: 13px;
-  opacity: 0.85;
-}
-
-/* Close button */
-.sponsor-card button {
-  margin-top: 15px;
-  padding: 8px 14px;
-  background: transparent;
-  border: 1px solid #39ff14;
-  color: #39ff14;
-  border-radius: 10px;
-}
-    
     .scan-text {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       margin: 24px 0 22px;
-      text-shadow: 0 0 12px rgba(57, 255, 20, 0.65);
+      text-shadow: 0 0 14px rgba(57,255,20,0.75);
       animation: pulseText 1.5s infinite;
     }
 
     .dashboard-enter {
-      margin-top: 8px;
+      position: relative;
+      z-index: 10000;
+      pointer-events: auto;
+    }
+
+    button {
+      border: 2px solid #39ff14;
+      border-radius: 14px;
+      padding: 10px 18px;
+      background: transparent;
+      color: #39ff14;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(57,255,20,0.35);
+    }
+
+    button:hover {
+      box-shadow: 0 0 18px rgba(57,255,20,0.6);
+    }
+
+    .dashboard {
+      display: none;
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .dashboard-header {
+      text-align: center;
+      font-size: 34px;
+      font-weight: bold;
+      margin: 14px 0 24px;
+      text-shadow: 0 0 18px rgba(57,255,20,0.75);
+    }
+
+    .panel {
+      border: 2px solid #39ff14;
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 24px;
+      background: rgba(0,30,0,0.45);
+      box-shadow: 0 0 16px rgba(57,255,20,0.25);
+    }
+
+    h3 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+
+    .hidden-input { display: none; }
+
+    .status,
+    .result-box {
+      margin-top: 14px;
+      min-height: 24px;
+      color: #aaff9d;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    #scanBar {
+      width: 0%;
+      height: 10px;
+      border-radius: 10px;
+      background: #39ff14;
+      margin-top: 14px;
+      box-shadow: 0 0 12px rgba(57,255,20,0.55);
+      transition: width 0.35s ease;
+    }
+
+    #preview {
+      display: none;
+      width: 100%;
+      max-width: 340px;
+      border-radius: 14px;
+      border: 1px solid rgba(57,255,20,0.45);
+      margin-top: 16px;
+    }
+
+    .label-buttons,
+    .action-row,
+    .file-row,
+    .top-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .counter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .counter-card,
+    .check-card,
+    .result-box {
+      border: 1px solid rgba(57,255,20,0.35);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .check-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .check-card label {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 2px solid #39ff14;
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .sponsor-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,10,0,0.86);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+
+    .sponsor-card {
+      width: 90%;
+      max-width: 390px;
+      background: #001a00;
+      border: 2px solid #39ff14;
+      border-radius: 18px;
+      padding: 22px;
+      color: #39ff14;
+      text-align: center;
+      box-shadow: 0 0 28px rgba(57,255,20,0.75);
+    }
+
+    .sponsor-card h2 { margin-top: 0; }
+
+    .tagline {
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+
+    .sponsor-buttons a {
+      display: inline-block;
+      margin: 6px;
+      padding: 10px 14px;
+      border: 1px solid #39ff14;
+      border-radius: 10px;
+      color: #39ff14;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .review {
+      margin-top: 10px;
+      font-size: 14px;
+      opacity: 0.9;
     }
 
     @keyframes sweep {
@@ -430,14 +340,12 @@
     }
 
     @keyframes pulseText {
-      0%, 100% { opacity: 0.7; }
+      0%, 100% { opacity: 0.75; }
       50% { opacity: 1; }
     }
 
     @media (max-width: 767px) {
-      .counter-grid {
-        grid-template-columns: 1fr;
-      }
+      .counter-grid { grid-template-columns: 1fr; }
 
       .radar-circle {
         width: 260px;
@@ -456,83 +364,18 @@
       .dashboard-header {
         font-size: 26px;
       }
-      .radar-ad-box {
-  position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 12px;
-  border: 1px solid #39ff14;
-  border-radius: 12px;
-  background: rgba(0, 20, 0, 0.82);
-  color: #39ff14;
-  font-weight: 700;
-  font-size: 14px;
-  box-shadow: 0 0 10px rgba(57,255,20,0.45);
-  z-index: 50;
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-
-.hidden {
-  display: none;
-}
-
-.sponsor-card {
-  width: 90%;
-  max-width: 360px;
-  background: #001a00;
-  border: 2px solid #39ff14;
-  border-radius: 18px;
-  padding: 20px;
-  color: #39ff14;
-  text-align: center;
-  box-shadow: 0 0 20px rgba(57,255,20,0.55);
-  position: relative;
-  top: 70px;
-}
-
-.sponsor-card h2 {
-  margin: 0 0 8px;
-}
-
-.tagline {
-  margin: 0 0 14px;
-  opacity: 0.85;
-}
-
-.sponsor-info p {
-  margin: 6px 0;
-}
-
-.sponsor-buttons a,
-.sponsor-card button {
-  display: inline-block;
-  margin: 6px;
-  padding: 10px 14px;
-  border: 1px solid #39ff14;
-  border-radius: 10px;
-  background: transparent;
-  color: #39ff14;
-  text-decoration: none;
-  font-weight: 700;
-}
-
-.review {
-  margin-top: 10px;
-  font-size: 13px;
-  opacity: 0.9;
-}
-    
     }
   </style>
 </head>
+
 <body>
+
   <div class="splash-screen" id="splashScreen">
     <div class="radar-container">
       <div class="radar-circle">
-       <div class="radar-ad-box" id="radarAdBox">Mike's Metal Yard</div>
+
+        <div class="radar-ad-box" id="radarAdBox">Mike's Metal Yard</div>
+
         <div class="radar-ring ring1"></div>
         <div class="radar-ring ring2"></div>
         <div class="radar-ring ring3"></div>
@@ -547,7 +390,7 @@
       <div class="scan-text">SCANNING...</div>
 
       <div class="dashboard-enter">
-        <button onclick="enterDashboard()">ENTER DASHBOARD</button>
+        <button id="enterBtn">ENTER DASHBOARD</button>
       </div>
     </div>
   </div>
@@ -556,7 +399,7 @@
     <div class="dashboard-header">BoardSense Dashboard</div>
 
     <div class="top-controls">
-      <button id="voiceBtn" onclick="toggleVoice()">🔊 Voice ON</button>
+      <button id="voiceBtn" onclick="toggleVoice()">🎙️ Voice ON</button>
     </div>
 
     <div class="panel">
@@ -567,6 +410,11 @@
       <div class="file-row">
         <button onclick="document.getElementById('imageInput').click()">📸 Upload Scan</button>
       </div>
+
+      <div id="scanBar"></div>
+      <p class="status" id="uploadStatus">System ready</p>
+
+      <img id="preview" alt="Board preview" />
 
       <div class="label-section">
         <h3>Label This Board</h3>
@@ -633,7 +481,31 @@
       <div id="lastPredictionBox" class="result-box">No prediction yet</div>
     </div>
   </div>
-  
+
+  <div id="sponsorOverlay" class="sponsor-overlay hidden">
+    <div class="sponsor-card">
+      <h2>Mike's Metal Yard</h2>
+      <p class="tagline">Fast payouts • Honest grading</p>
+
+      <div class="sponsor-info">
+        <p>📍 123 Main St, Scranton, PA</p>
+        <p>📞 (555) 555-5555</p>
+      </div>
+
+      <div class="sponsor-buttons">
+        <a href="https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA" target="_blank">Get Directions</a>
+        <a href="tel:5555555555">Call Now</a>
+      </div>
+
+      <div class="reviews">
+        <div class="review">“Quick unload and fair prices.”</div>
+        <div class="review">“Good people, easy in and out.”</div>
+      </div>
+
+      <button onclick="closeSponsor()">Close</button>
+    </div>
+  </div>
+
   <script>
     let lastUploadedFilename = "";
     let lastPrediction = null;
@@ -653,38 +525,42 @@
     function toggleVoice() {
       voiceEnabled = !voiceEnabled;
       const btn = document.getElementById("voiceBtn");
-      btn.textContent = voiceEnabled ? "🔊 Voice ON" : "🔇 Voice OFF";
+      btn.textContent = voiceEnabled ? "🎙️ Voice ON" : "🔇 Voice OFF";
       if (voiceEnabled) speak("Voice enabled");
     }
 
-     const sponsorData = {
-       name: "Mike's Metal Yard",
-       tagline: "Fast payouts • Honest grading",
-       address: "123 Main St, Scranton, PA",
-       phone: "(555) 555-5555",
-       directions: "https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA",
-       phoneLink: "tel:5555555555",
-       reviews: [
-        "Quick unload and fair prices.",
-        "Good people, easy in and out."
-      ]
-     
-    
     function enterDashboard() {
       document.getElementById("splashScreen").style.display = "none";
       document.getElementById("dashboard").style.display = "block";
+      closeSponsor();
+      loadHistory();
+      loadTrainingStatus();
+      renderLastPrediction();
+    }
+
+    function openSponsor() {
+      document.getElementById("sponsorOverlay").classList.remove("hidden");
+    }
+
+    function closeSponsor() {
+      document.getElementById("sponsorOverlay").classList.add("hidden");
     }
 
     function setBadge(grade) {
       const badge = document.getElementById("gradeBadge");
       badge.textContent = grade || "SYSTEM READY";
       badge.className = "badge";
+    }
 
-      const g = (grade || "").toUpperCase();
-      if (g === "HIGH") badge.classList.add("high");
-      else if (g === "MEDIUM") badge.classList.add("medium");
-      else if (g === "LOW") badge.classList.add("low");
-      else if (g === "JUNK") badge.classList.add("junk");
+    function estimateValue(grade) {
+      const values = {
+        HIGH: 15.0,
+        MEDIUM: 7.0,
+        LOW: 2.0,
+        JUNK: 0.5,
+        "PENDING REVIEW": 0.0
+      };
+      return values[grade] || 0.0;
     }
 
     function renderLastPrediction() {
@@ -700,38 +576,34 @@
         "<strong>AI Grade:</strong> " + (lastPrediction.ai_grade || "N/A") + "<br>" +
         "<strong>Confidence:</strong> " + (lastPrediction.confidence || "N/A") + "<br>" +
         "<strong>Action:</strong> " + (lastPrediction.action || "N/A") + "<br>" +
-        "<strong>Saved Label:</strong> " + (lastSavedLabel || "None yet");
+        "<strong>Value Estimate:</strong> $" + estimateValue(lastPrediction.ai_grade);
     }
 
     async function uploadImage() {
-      const fileInput = document.getElementById("imageInput");
-      const file = fileInput.files[0];
+      const input = document.getElementById("imageInput");
       const status = document.getElementById("uploadStatus");
       const preview = document.getElementById("preview");
       const scanBar = document.getElementById("scanBar");
 
-      if (!file) {
-        status.innerText = "📸 Please select a board image first";
-        return;
-      }
+      if (!input.files || !input.files[0]) return;
+
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
 
       preview.src = URL.createObjectURL(file);
       preview.style.display = "block";
 
-      scanBar.style.width = "100%";
-      status.innerText = "SCANNING...";
-      document.getElementById("labelStatus").innerText = "";
-      document.getElementById("result").innerText = "";
-      setBadge("SCANNING");
+      status.innerText = "Uploading and scanning...";
+      scanBar.style.width = "20%";
 
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-
         const res = await fetch("/upload", {
           method: "POST",
           body: formData
         });
+
+        scanBar.style.width = "75%";
 
         const data = await res.json();
 
@@ -740,44 +612,24 @@
         }
 
         lastUploadedFilename = data.filename || "";
-        status.innerText = "Saved: " + (data.filename || "uploaded");
+        lastPrediction = data;
+
         setBadge(data.ai_grade || "PENDING REVIEW");
 
-        lastPrediction = {
-          filename: data.filename || "",
-          ai_grade: data.ai_grade || "PENDING REVIEW",
-          confidence: data.confidence || "N/A",
-          action: data.action || "Review manually"
-        };
-
-        if (data.ai_grade === "HIGH") {
-          setTimeout(() => speak("High value board detected"), 200);
-        } else if (data.ai_grade === "MEDIUM") {
-          setTimeout(() => speak("Medium grade board"), 200);
-        } else if (data.ai_grade === "LOW") {
-          setTimeout(() => speak("Low grade material"), 200);
-        } else if (data.ai_grade === "JUNK") {
-          setTimeout(() => speak("Discard board"), 200);
-        } else {
-          setTimeout(() => speak("Board classified"), 200);
-        }
-
-        lastSavedLabel = "";
         document.getElementById("result").innerText =
-          "Confidence: " + (data.confidence || "N/A") +
-          " | Action: " + (data.action || "Review manually");
+          "AI Grade: " + (data.ai_grade || "N/A") + "\n" +
+          "Confidence: " + (data.confidence || "N/A") + "\n" +
+          "Action: " + (data.action || "N/A") + "\n" +
+          "Value Estimate: $" + estimateValue(data.ai_grade);
+
+        status.innerText = "Scan complete";
+        scanBar.style.width = "100%";
 
         renderLastPrediction();
-        await loadHistory();
+        speak("Scan complete");
       } catch (err) {
         status.innerText = "Upload failed: " + err.message;
-        setBadge("ERROR");
-      } finally {
-        setTimeout(() => {
-          if (scanBar) {
-            scanBar.style.width = "0%";
-          }
-        }, 500);
+        scanBar.style.width = "0%";
       }
     }
 
@@ -785,7 +637,7 @@
       const status = document.getElementById("labelStatus");
 
       if (!lastUploadedFilename) {
-        status.innerText = "Upload an image first";
+        status.innerText = "Upload a board first.";
         return;
       }
 
@@ -802,21 +654,21 @@
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || "Save label failed");
+          throw new Error(data.detail || "Save failed");
         }
 
         lastSavedLabel = label;
         status.innerText = "Saved label: " + label;
-        renderLastPrediction();
-        speak("Label saved as " + label);
-        await loadTrainingStatus();
-        await loadHistory();
+        speak("Label saved");
+        loadTrainingStatus();
       } catch (err) {
-        status.innerText = "Save failed: " + err.message;
+        status.innerText = "Label failed: " + err.message;
       }
     }
 
     async function sendManualGrade() {
+      const result = document.getElementById("result");
+
       const payload = {
         gold_fingers: document.getElementById("gf").checked,
         dense_chips: document.getElementById("dc").checked,
@@ -835,20 +687,22 @@
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.detail || "Manual grading failed");
+          throw new Error(data.detail || "Manual grade failed");
         }
 
-        setBadge(data.grade || "SYSTEM READY");
-        document.getElementById("result").innerText =
-          "Manual Grade: " + (data.grade || "N/A") +
-          " | Reason: " + (data.reason || "No reason provided");
+        const grade = data.grade || data.ai_grade || "PENDING REVIEW";
+        const action = data.action || "Manual grading complete";
 
-        if (data.grade) {
-          speak("Manual grade " + data.grade);
-        }
+        setBadge(grade);
+
+        result.innerText =
+          "Manual Grade: " + grade + "\n" +
+          "Action: " + action + "\n" +
+          "Value Estimate: $" + estimateValue(grade);
+
+        speak("Manual grade complete");
       } catch (err) {
-        document.getElementById("result").innerText = "Manual grading failed: " + err.message;
-        setBadge("ERROR");
+        result.innerText = "Manual grade failed: " + err.message;
       }
     }
 
@@ -859,27 +713,22 @@
         const res = await fetch("/history");
         const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.detail || "History load failed");
-        }
+        if (!res.ok) throw new Error(data.detail || "History failed");
 
-        if (!Array.isArray(data) || data.length === 0) {
+        const scans = data.scans || data || [];
+
+        if (!Array.isArray(scans) || scans.length === 0) {
           box.innerHTML = "No scans yet";
           return;
         }
 
-        box.innerHTML = data
-          .slice()
-          .reverse()
-          .map(item =>
-            "<div style='margin-bottom:10px;'>" +
-            "<strong>" + (item.filename || "Unknown") + "</strong><br>" +
-            "Grade: " + (item.label || item.ai_grade || "N/A") +
-            "</div>"
-          )
-          .join("");
+        box.innerHTML = scans.map(item => {
+          const filename = item.filename || "Unknown";
+          const grade = item.ai_grade || item.label || "N/A";
+          return "<strong>" + filename + "</strong><br>Grade: " + grade;
+        }).join("<hr>");
       } catch (err) {
-        box.innerHTML = "Failed to load history: " + err.message;
+        box.innerHTML = "History unavailable: " + err.message;
       }
     }
 
@@ -888,19 +737,16 @@
         const res = await fetch("/training-status");
         const data = await res.json();
 
-        if (!res.ok) {
-          throw new Error(data.detail || "Training status failed");
-        }
+        if (!res.ok) throw new Error(data.detail || "Counter failed");
 
-        document.getElementById("countHigh").innerText = data.high ?? 0;
-        document.getElementById("countMedium").innerText = data.medium ?? 0;
-        document.getElementById("countLow").innerText = data.low ?? 0;
-        document.getElementById("countJunk").innerText = data.junk ?? 0;
-        document.getElementById("countTotal").innerText = data.total ?? 0;
+        document.getElementById("countHigh").innerText = data.high || data.HIGH || 0;
+        document.getElementById("countMedium").innerText = data.medium || data.MEDIUM || 0;
+        document.getElementById("countLow").innerText = data.low || data.LOW || 0;
+        document.getElementById("countJunk").innerText = data.junk || data.JUNK || 0;
+        document.getElementById("countTotal").innerText = data.total || 0;
         document.getElementById("countReady").innerText = data.ready ? "YES" : "NO";
       } catch (err) {
-        document.getElementById("trainStatus").innerText =
-          "Training status failed: " + err.message;
+        document.getElementById("countReady").innerText = "ERROR";
       }
     }
 
@@ -931,49 +777,24 @@
       }
     }
 
-    document.getElementById("imageInput").addEventListener("change", uploadImage);
+    window.addEventListener("load", function () {
+      const enterBtn = document.getElementById("enterBtn");
+      const radarAdBox = document.getElementById("radarAdBox");
+      const imageInput = document.getElementById("imageInput");
 
-</script>
+      if (enterBtn) {
+        enterBtn.addEventListener("click", enterDashboard);
+      }
 
-<!-- SPONSOR POPUP -->
-<div id="sponsorOverlay" class="sponsor-overlay hidden">
-  <div class="sponsor-card">
-    <h2>Mike's Metal Yard</h2>
-    <p class="tagline">Fast payouts • Honest grading</p>
+      if (radarAdBox) {
+        radarAdBox.addEventListener("click", openSponsor);
+      }
 
-    <div class="sponsor-info">
-      <p>📍 123 Main St, Scranton, PA</p>
-      <p>📞 (555) 555-5555</p>
-    </div>
+      if (imageInput) {
+        imageInput.addEventListener("change", uploadImage);
+      }
+    });
+  </script>
 
-    <div class="sponsor-buttons">
-      <a href="https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA" target="_blank">Get Directions</a>
-      <a href="tel:5555555555">Call Now</a>
-    </div>
-
-    <div class="reviews">
-      <div class="review">"Quick unload and fair prices."</div>
-      <div class="review">"Good people, easy in and out."</div>
-    </div>
-
-    <button onclick="closeSponsor()">Close</button>
-  </div>
-</div>
-
-<script>
-function openSponsor() {
-  document.getElementById("sponsorOverlay").classList.remove("hidden");
-}
-
-function closeSponsor() {
-  document.getElementById("sponsorOverlay").classList.add("hidden");
-}
-window.addEventListener("load", function () {
-  const adBox = document.getElementById("radarAdBox");
-  if (adBox) {
-    adBox.addEventListener("click", openSponsor);
-  }
-});
-</script>
 </body>
 </html>
