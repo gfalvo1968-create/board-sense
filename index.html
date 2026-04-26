@@ -527,9 +527,29 @@
 
   <script>
     let lastUploadedFilename = "";
-    let lastPrediction = null;
-    let lastSavedLabel = "";
-    let voiceEnabled = true;
+let lastPrediction = null;
+let lastSavedLabel = "";
+let voiceEnabled = true;
+
+// 👇 ADD IT RIGHT HERE
+const sponsors = [
+  {
+    name: "Mike's Metal Yard",
+    tagline: "Fast payouts • Honest grading",
+    address: "123 Main St, Scranton, PA",
+    phone: "(555) 555-5555",
+    directions: "https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA"
+  },
+  {
+    name: "Langley Recycling",
+    tagline: "Top prices on copper",
+    address: "456 Market St, PA",
+    phone: "(555) 111-2222",
+    directions: "#"
+  }
+];
+
+let currentSponsor = 0;
 
     function speak(text) {
       if (!voiceEnabled || !("speechSynthesis" in window)) return;
