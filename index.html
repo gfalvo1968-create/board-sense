@@ -550,7 +550,14 @@
 
     function enterDashboard() {
   document.getElementById("splashScreen").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
+
+  const dash = document.getElementById("dashboard");
+  dash.style.display = "block";
+
+  // smooth fade-in
+  setTimeout(() => {
+    dash.style.opacity = "1";
+  }, 50);
 
   // 🔥 force kill any popup
   document.getElementById("sponsorOverlay").classList.add("hidden");
