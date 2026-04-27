@@ -878,7 +878,26 @@ if (radarAdBox) {
       if (imageInput) {
         imageInput.addEventListener("change", uploadImage);
       }
-    });
+window.addEventListener("load", function () {
+  const enterBtn = document.getElementById("enterBtn");
+  const radarAdBox = document.getElementById("radarAdBox");
+  const imageInput = document.getElementById("imageInput");
+
+  if (enterBtn) {
+    enterBtn.onclick = enterDashboard;
+  }
+
+  if (radarAdBox) {
+    radarAdBox.onclick = openSponsor;
+    loadSponsor(currentSponsor);
+    setInterval(rotateSponsor, 7000);
+  }
+
+  if (imageInput) {
+    imageInput.onchange = uploadImage;
+  }
+});
+  
   </script>
 
 </body>
