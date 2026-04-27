@@ -551,6 +551,25 @@ const sponsors = [
 
 let currentSponsor = 0;
 
+    function loadSponsor(index) {
+  const sponsor = sponsors[index];
+
+  const radarAdBox = document.getElementById("radarAdBox");
+  if (radarAdBox) radarAdBox.textContent = sponsor.name;
+
+  document.getElementById("sponsorName").textContent = sponsor.name;
+  document.getElementById("sponsorTagline").textContent = sponsor.tagline;
+  document.getElementById("sponsorAddress").textContent = "📍 " + sponsor.address;
+  document.getElementById("sponsorPhone").textContent = "📞 " + sponsor.phone;
+  document.getElementById("sponsorDirections").href = sponsor.directions;
+  document.getElementById("sponsorCall").href = "tel:" + sponsor.phone.replace(/\D/g, "");
+}
+
+function rotateSponsor() {
+  currentSponsor = (currentSponsor + 1) % sponsors.length;
+  loadSponsor(currentSponsor);
+}
+    
     function speak(text) {
       if (!voiceEnabled || !("speechSynthesis" in window)) return;
       window.speechSynthesis.cancel();
