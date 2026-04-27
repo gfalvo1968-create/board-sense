@@ -854,9 +854,13 @@ function rotateSponsor() {
         enterBtn.addEventListener("click", enterDashboard);
       }
 
-      if (radarAdBox) {
-        radarAdBox.addEventListener("click", openSponsor);
-      }
+      const radarAdBox = document.getElementById("radarAdBox");
+
+if (radarAdBox) {
+  loadSponsor(currentSponsor);            // 👈 initializes first ad
+  radarAdBox.addEventListener("click", openSponsor);
+  setInterval(rotateSponsor, 7000);       // 👈 rotates every 7 sec
+}
 
       if (imageInput) {
         imageInput.addEventListener("change", uploadImage);
