@@ -537,51 +537,7 @@ let lastPrediction = null;
 let lastSavedLabel = "";
 let voiceEnabled = true;
 
-// 👇 ADD IT RIGHT HERE
-const sponsors = [
-  {
-    name: "Mike's Metal Yard",
-    tagline: "Fast payouts • Honest grading",
-    address: "123 Main St, Scranton, PA",
-    phone: "(555) 555-5555",
-    directions: "https://www.google.com/maps/search/?api=1&query=123+Main+St+Scranton+PA"
-  },
-  {
-    name: "Langley Recycling",
-    tagline: "Top prices on copper",
-    address: "456 Market St, PA",
-    phone: "(555) 111-2222",
-    directions: "#"
-  }
-];
 
-let currentSponsor = 0;
-
-function loadSponsor(index) {
-  const sponsor = sponsors[index];
-
-  const radarAdBox = document.getElementById("radarAdBox");
-  if (radarAdBox) radarAdBox.textContent = sponsor.name;
-
-  const name = document.getElementById("sponsorName");
-  const tagline = document.getElementById("sponsorTagline");
-  const address = document.getElementById("sponsorAddress");
-  const phone = document.getElementById("sponsorPhone");
-  const directions = document.getElementById("sponsorDirections");
-  const call = document.getElementById("sponsorCall");
-
-  if (name) name.textContent = sponsor.name;
-  if (tagline) tagline.textContent = sponsor.tagline;
-  if (address) address.textContent = "📍 " + sponsor.address;
-  if (phone) phone.textContent = "📞 " + sponsor.phone;
-  if (directions) directions.href = sponsor.directions;
-  if (call) call.href = "tel:" + sponsor.phone.replace(/\D/g, "");
-}
-
-function rotateSponsor() {
-  currentSponsor = (currentSponsor + 1) % sponsors.length;
-  loadSponsor(currentSponsor);
-}
     
     function speak(text) {
       if (!voiceEnabled || !("speechSynthesis" in window)) return;
