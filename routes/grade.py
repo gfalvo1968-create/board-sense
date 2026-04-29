@@ -104,7 +104,7 @@ async def upload(file: UploadFile = File(...)):
     with save_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-        try:
+    try:
         predict_board_grade = get_predict_board_grade()
         result = predict_board_grade(str(save_path))
 
