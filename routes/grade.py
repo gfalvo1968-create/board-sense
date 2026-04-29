@@ -113,12 +113,6 @@ async def upload(file: UploadFile = File(...)):
 
         ai_grade, confidence, action = result
 
-    except Exception as e:
-        ai_grade = "PENDING REVIEW"
-        confidence = 0.0
-        action = f"Prediction unavailable: {e}"
-
-    ai_grade, confidence, action = result
 
 except Exception as e:
     ai_grade = "PENDING REVIEW"
