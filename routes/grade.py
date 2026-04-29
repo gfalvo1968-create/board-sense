@@ -24,8 +24,6 @@ SCANS_CSV = DB_DIR / "scans.csv"
 
 classifier_module = None
 
-classifier_module = None
-
 def get_predict_board_grade():
     def fallback_predict(image_path):
         return "PENDING REVIEW", 0.0, "Prediction unavailable: model not loaded yet"
