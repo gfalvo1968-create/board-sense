@@ -25,22 +25,10 @@ SCANS_CSV = DB_DIR / "scans.csv"
 classifier_module = None
 
 def get_predict_board_grade():
-    global classifier_module
+    def fallback_predict(image_path):
+        return "PENDING REVIEW", 0.0, "Prediction unavailable: model not loaded yet"
 
-    if classifier_module is None:
-        classifier_path = BASE_DIR / "ml" / "classifier.py"
-
-        if not classifier_path.exists():
-            raise FileNotFoundError(f"Missing classifier file: {classifier_path}")
-
-        spec = importlib.util.spec_from_file_location("classifier", classifier_path)
-        if spec is None or spec.loader is None:
-            raise ImportError(f"Could not load spec for {classifier_path}")
-
-        classifier_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(classifier_module)
-
-    return classifier_module.predict_board_grade
+    return fallback_predict
 
 router = APIRouter()
 
