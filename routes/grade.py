@@ -105,12 +105,18 @@ async def upload(file: UploadFile = File(...)):
         shutil.copyfileobj(file.file, buffer)
 
     try:
-        predict_board_grade = ...
-        ai_grade, confidence, action = ...
-    except Exception as e:
-            ai_grade = "PENDING REVIEW"
-            confidence = 0.0
-            action = f"Prediction unavailable: {e}"
+    predict_board_grade = get_predict_board_grade()
+    result = predict_board_grade(str(save_path))
+
+    if not isinstance(result, tuple) or len(result) != 3:
+        raise ValueError(f"Bad prediction result: {result}")
+
+    ai_grade, confidence, action = result
+
+except Exception as e:
+    ai_grade = "PENDING REVIEW"
+    confidence = 0.0
+    action = f"Prediction unavailable: {e}"
 
     append_scan(safe_name, ai_grade, confidence, action)
 
