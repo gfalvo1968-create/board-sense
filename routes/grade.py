@@ -242,25 +242,35 @@ def training_status():
 
 @router.post("/train-model")
 def train_model():
+    import sys
+
     if not TRAIN_SCRIPT.exists():
-        raise HTTPException(status_code=500, detail="Training script missing")
+        raise HTTPException(status_code=500, detail="train_model.py not found")
 
-    result = subprocess.run(
-        [sys.executable, str(TRAIN_SCRIPT)],
-        capture_output=True,
-        text=True,
-        cwd=str(BASE_DIR),
-    )
-
-    output = (result.stdout or "") + ("\n" + result.stderr if result.stderr else "")
-
-    if result.returncode != 0:
-        raise HTTPException(
-            status_code=500,
-            detail=f"TRAIN ERROR:\n{output}"
+    try:
+        result = subprocess.run(
+            [sys.executable, str(TRAIN_SCRIPT)],
+            capture_output=True,
+            text=True,
+            cwd=str(BASE_DIR),
         )
 
-    return {
-        "message": "Training completed successfully",
-        "output": output.strip()
-    }
+        print("STDOUT:", result.stdout)
+        print("STDERR:", result.stderr)
+
+        if result.returncode != 0:
+            return {
+                "status": "error",
+                "output": result.stderr or "Training failed"
+            }
+
+        return {
+            "status": "success",
+            "output": result.stdout or "Training completed"
+        }
+
+    except Exception as e:
+        return {
+            "status": "crash",
+            "output": str(e)
+        }
