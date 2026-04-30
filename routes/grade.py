@@ -104,7 +104,7 @@ async def upload(file: UploadFile = File(...)):
     with save_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-   try:
+    try:
         predict_board_grade = get_predict_board_grade()
         result = predict_board_grade(str(save_path))
 
@@ -117,6 +117,8 @@ async def upload(file: UploadFile = File(...)):
         ai_grade = "PENDING REVIEW"
         confidence = 0.0
         action = f"Prediction unavailable: {e}"
+
+    append_scan(safe_name, ai_grade, confidence, action)
 
     return {
         "filename": safe_name,
