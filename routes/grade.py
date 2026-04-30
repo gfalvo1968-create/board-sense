@@ -50,8 +50,6 @@ def get_predict_board_grade():
 
     return predict
 
-    return fallback_predict
-
 router = APIRouter()
 
 
