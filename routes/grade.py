@@ -39,8 +39,6 @@ MODEL_DIR.mkdir(parents=True, exist_ok=True)
 LABELS_CSV = DB_DIR / "labels.csv"
 SCANS_CSV = DB_DIR / "scans.csv"
 
-classifier_module = None
-
 def get_predict_board_grade():
     def predict(image_path):
         if classifier_module:
