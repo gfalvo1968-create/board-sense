@@ -46,9 +46,6 @@ def predict(image_path):
         return "HIGH", 0.85, "Model prediction"
     return "PENDING REVIEW", 0.0, "Model not loaded yet"
 
-return prediction.upper(), float(confidence), "Model prediction"
-        return "PENDING REVIEW", 0.0, "Model not loaded yet"
-
     return predict
 
 router = APIRouter()
