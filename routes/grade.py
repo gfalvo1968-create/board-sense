@@ -24,7 +24,6 @@ classifier_module = None
 
 def load_model():
     global classifier_module
-
     if MODEL_PATH.exists():
         classifier_module = "LOADED"
     else:
