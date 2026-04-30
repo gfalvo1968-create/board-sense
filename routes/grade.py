@@ -15,6 +15,23 @@ DB_DIR = BASE_DIR / "db"
 MODEL_DIR = BASE_DIR / "model"
 TRAIN_SCRIPT = BASE_DIR / "train_model.py"
 
+MODEL_DIR = BASE_DIR / "model"
+
+# 👇 ADD THIS BLOCK RIGHT HERE
+MODEL_PATH = MODEL_DIR / "boardsense_model.txt"
+
+classifier_module = None
+
+def load_model():
+    global classifier_module
+
+    if MODEL_PATH.exists():
+        classifier_module = "LOADED"
+    else:
+        classifier_module = None
+
+load_model()
+
 IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 DB_DIR.mkdir(parents=True, exist_ok=True)
 MODEL_DIR.mkdir(parents=True, exist_ok=True)
