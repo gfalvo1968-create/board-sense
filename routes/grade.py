@@ -47,6 +47,16 @@ def get_predict_board_grade():
         if classifier_module:
             name = str(image_path).lower()
 
+           labels = {}
+if LABELS_CSV.exists():
+    with LABELS_CSV.open("r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            labels[row.get("filename", "")] = row.get("label", "").lower()
+
+filename = Path(image_path).name
+label = labels.get(filename, "")
+            
             if "high" in name:
                 return "HIGH", 0.85, "Hybrid model marker + filename signal"
             if "medium" in name:
