@@ -41,15 +41,12 @@ SCANS_CSV = DB_DIR / "scans.csv"
 def get_predict_board_grade():
     load_model()
 
-def predict(image_path):
-    if classifier_module:
-        return "HIGH", 0.85, "Model prediction"
-    return "PENDING REVIEW", 0.0, "Model not loaded yet"
+    def predict(image_path):
+        if classifier_module:
+            return "HIGH", 0.85, "Model prediction"
+        return "PENDING REVIEW", 0.0, "Model not loaded yet"
 
     return predict
-
-router = APIRouter()
-
 
 class SaveLabelRequest(BaseModel):
     filename: str
