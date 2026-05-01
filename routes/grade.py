@@ -45,19 +45,19 @@ def get_predict_board_grade():
 
     def predict(image_path):
         if classifier_module:
-            if classifier_module:
-    name = str(image_path).lower()
+            name = str(image_path).lower()
 
-    if "high" in name:
-        return "HIGH", 0.85, "Hybrid model marker + filename signal"
-    if "medium" in name:
-        return "MEDIUM", 0.75, "Hybrid model marker + filename signal"
-    if "low" in name:
-        return "LOW", 0.65, "Hybrid model marker + filename signal"
-    if "junk" in name:
-        return "JUNK", 0.60, "Hybrid model marker + filename signal"
+            if "high" in name:
+                return "HIGH", 0.85, "Hybrid model marker + filename signal"
+            if "medium" in name:
+                return "MEDIUM", 0.75, "Hybrid model marker + filename signal"
+            if "low" in name:
+                return "LOW", 0.65, "Hybrid model marker + filename signal"
+            if "junk" in name:
+                return "JUNK", 0.60, "Hybrid model marker + filename signal"
 
-    return "PENDING REVIEW", 0.25, "Model loaded, needs stronger signal"
+            return "PENDING REVIEW", 0.25, "Model loaded, needs stronger signal"
+
         return "PENDING REVIEW", 0.0, "Model not loaded yet"
 
     return predict
