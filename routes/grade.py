@@ -162,13 +162,14 @@ async def upload(file: UploadFile = File(...)):
     append_scan(safe_name, ai_grade, confidence, action)
 
     return {
-        "filename": safe_name,
-        "image_url": f"/data/images/{safe_name}",
-        "ai_grade": ai_grade,
-        "confidence": confidence,
-        "action": action,
-        "value_estimate": estimate_value(ai_grade),
-    }
+    "filename": safe_name,
+    "image_url": f"/data/images/{safe_name}",
+    "ai_grade": ai_grade,
+    "confidence": confidence,
+    "action": action,
+    "signals": signals,   # 👈 THIS IS YOUR LIGHT SYSTEM
+    "value_estimate": estimate_value(ai_grade),
+}
 
 
 @router.post("/save-label")
