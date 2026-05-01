@@ -3,6 +3,7 @@ import csv
 import shutil
 import subprocess
 import importlib.util
+router = APIRouter()
 from datetime import datetime
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
