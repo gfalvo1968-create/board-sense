@@ -262,7 +262,10 @@ def train_model():
     import sys
 
     if not TRAIN_SCRIPT.exists():
-        raise HTTPException(status_code=500, detail="train_model.py not found")
+        raise HTTPException(
+            status_code=500,
+            detail="train_model.py not found"
+        )
 
     try:
         result = subprocess.run(
@@ -272,22 +275,24 @@ def train_model():
             cwd=str(BASE_DIR),
         )
 
-        print("STDOUT:", result.stdout)
-        print("STDERR:", result.stderr)
+        output = ""
+        if result.stdout:
+            output += result.stdout
+        if result.stderr:
+            output += "\n" + result.stderr
 
-   if result.returncode != 0:
-    return {
-        "status": "error",
-        "output": result.stderr or "Training failed"
-    }
+        if result.returncode != 0:
+            return {
+                "status": "error",
+                "output": output.strip() or "Training failed"
+            }
 
-# 🔥 HYBRID MAGIC SWITCH
-load_model()
+        load_model()
 
-return {
-    "status": "success",
-    "output": result.stdout or "Training completed successfully"
-}
+        return {
+            "status": "success",
+            "output": output.strip() or "Training completed successfully"
+        }
 
     except Exception as e:
         return {
