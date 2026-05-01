@@ -133,7 +133,11 @@ async def upload(file: UploadFile = File(...)):
 
     try:
         predict_board_grade = get_predict_board_grade()
-        result = predict_board_grade(str(save_path))
+
+if not callable(predict_board_grade):
+    raise ValueError("Predict function not loaded")
+
+result = predict_board_grade(str(save_path))
 
         if not isinstance(result, tuple) or len(result) != 3:
             raise ValueError(f"Bad prediction result: {result}")
