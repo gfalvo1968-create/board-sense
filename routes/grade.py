@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import importlib.util
 from datetime import datetime
-
+from routes.board_knowledge import analyze_features
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from pydantic import BaseModel
 
