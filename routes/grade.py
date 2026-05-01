@@ -151,7 +151,9 @@ async def upload(file: UploadFile = File(...)):
             raise ValueError(f"Bad prediction result: {result}")
 
         ai_grade, confidence, action = result
-
+        signals = analyze_features(str(save_path))
+    
+    
     except Exception as e:
         ai_grade = "PENDING REVIEW"
         confidence = 0.0
