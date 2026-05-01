@@ -166,13 +166,12 @@ async def upload(file: UploadFile = File(...)):
     append_scan(safe_name, ai_grade, confidence, action)
 
     return {
-    "filename": safe_name,
+    "filename": str(safe_name),
     "image_url": f"/data/images/{safe_name}",
-    "ai_grade": ai_grade,
-    "confidence": confidence,
-    "action": action,
-    "signals": signals,   # 👈 THIS IS YOUR LIGHT SYSTEM
-    "value_estimate": estimate_value(ai_grade),
+    "ai_grade": str(ai_grade),
+    "confidence": float(confidence),
+    "action": str(action),
+    "value_estimate": float(estimate_value(ai_grade)),
 }
 
 
