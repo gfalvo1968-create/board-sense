@@ -282,12 +282,12 @@ def train_model():
     }
 
 # 🔥 HYBRID MAGIC SWITCH
-load_model()
+        load_model()
 
-return {
-    "status": "success",
-    "output": result.stdout or "Training completed successfully"
-}
+    return {
+        "status": "success",
+        "output": result.stdout or "Training completed successfully"
+    }
 
         return {
             "status": "success",
