@@ -47,28 +47,18 @@ def get_predict_board_grade():
         if classifier_module:
             name = str(image_path).lower()
 
-           labels = {}
-if LABELS_CSV.exists():
-    with LABELS_CSV.open("r", newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            labels[row.get("filename", "")] = row.get("label", "").lower()
+            if "high" in name:
+                return "HIGH", 0.85, "Hybrid model marker"
+            if "medium" in name:
+                return "MEDIUM", 0.75, "Hybrid model marker"
+            if "low" in name:
+                return "LOW", 0.65, "Hybrid model marker"
+            if "junk" in name:
+                return "JUNK", 0.60, "Hybrid model marker"
 
-filename = Path(image_path).name
-label = labels.get(filename, "")
-            
-            if label == "high":
-    return "HIGH", 0.85, "Hybrid model marker + saved label"
-if label == "medium":
-    return "MEDIUM", 0.75, "Hybrid model marker + saved label"
-if label == "low":
-    return "LOW", 0.65, "Hybrid model marker + saved label"
-if label == "junk":
-    return "JUNK", 0.60, "Hybrid model marker + saved label"
+            return "PENDING REVIEW", 0.25, "Needs more signals"
 
-            return "PENDING REVIEW", 0.25, "Model loaded, needs stronger signal"
-
-        return "PENDING REVIEW", 0.0, "Model not loaded yet"
+        return "PENDING REVIEW", 0.0, "Model not loaded"
 
     return predict
 
