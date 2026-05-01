@@ -276,10 +276,18 @@ def train_model():
         print("STDERR:", result.stderr)
 
         if result.returncode != 0:
-            return {
-                "status": "error",
-                "output": result.stderr or "Training failed"
-            }
+    return {
+        "status": "error",
+        "output": result.stderr or "Training failed"
+    }
+
+# 🔥 HYBRID MAGIC SWITCH
+load_model()
+
+return {
+    "status": "success",
+    "output": result.stdout or "Training completed successfully"
+}
 
         return {
             "status": "success",
