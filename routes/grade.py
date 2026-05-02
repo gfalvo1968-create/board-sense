@@ -154,6 +154,7 @@ result = predict_board_grade(str(save_path))
     append_scan(safe_name, ai_grade, confidence, action)
 
     return {
+    "signals": signals,
     "filename": str(safe_name),
     "image_url": f"/data/images/{safe_name}",
     "ai_grade": str(ai_grade),
