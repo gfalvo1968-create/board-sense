@@ -131,13 +131,13 @@ async def upload(file: UploadFile = File(...)):
     with save_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    try:
+     try:
         predict_board_grade = get_predict_board_grade()
 
-if not callable(predict_board_grade):
-    raise ValueError("Predict function not loaded")
+        if not callable(predict_board_grade):
+            raise ValueError("Predict function not loaded")
 
-result = predict_board_grade(str(save_path))
+        result = predict_board_grade(str(save_path))
 
         if not isinstance(result, tuple) or len(result) != 3:
             raise ValueError(f"Bad prediction result: {result}")
