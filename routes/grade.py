@@ -131,7 +131,7 @@ async def upload(file: UploadFile = File(...)):
     with save_path.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-         try:
+    try:
         predict_board_grade = get_predict_board_grade()
 
         if not callable(predict_board_grade):
@@ -144,8 +144,6 @@ async def upload(file: UploadFile = File(...)):
 
         ai_grade, confidence, action = result
         signals = analyze_features(str(save_path))
-
-    except Exception as e:
     
     
     except Exception as e:
