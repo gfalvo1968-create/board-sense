@@ -804,6 +804,46 @@ async function trainModel() {
   } catch (err) {
     $("trainStatus").textContent = "Training failed";
     $("trainOutput").textContent = err.message;
+ 
+  function renderSignals(signalsData) {
+  const box = $("signalLightsBox");
+  const jackpotBox = $("jackpotBox");
+
+  if (!signalsData) {
+    box.innerHTML = "No signal scan yet";
+    jackpotBox.classList.add("hidden");
+    return;
+  }
+
+  const lights = signalsData.lights || {};
+  const signals = signalsData.signals || {};
+
+  const names = {
+    gold_fingers: "Gold Fingers",
+    dense_chips: "Dense Chips",
+    industrial_connectors: "Industrial Connectors",
+    power_board: "Power Board",
+    heavy: "Heavy Components"
+  };
+
+  box.innerHTML = Object.keys(names).map(key => {
+    const light = lights[key] || "🔴";
+    const level = signals[key] || "RED";
+
+    return `
+      <div class="signal-row">
+        <span>${names[key]}</span>
+        <span>${level} <span class="signal-light">${light}</span></span>
+      </div>
+    `;
+  }).join("");
+
+  if (signalsData.jackpot) {
+    jackpotBox.classList.remove("hidden");
+    jackpotBox.classList.add("jackpot-fire");
+  } else {
+    jackpotBox.classList.add("hidden");
+    jackpotBox.classList.remove("jackpot-fire");
   }
 }
 
