@@ -324,7 +324,42 @@ button:hover, a.button-link:hover {
   .counter-grid {
     grid-template-columns: 1fr;
   }
+
+.signal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(57,255,20,.35);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
 }
+
+.signal-light {
+  font-size: 24px;
+  text-shadow: 0 0 10px rgba(57,255,20,.8);
+}
+
+.jackpot-fire {
+  animation: jackpotPulse 0.6s infinite alternate;
+  border-color: #00b7ff;
+  color: #00b7ff;
+  box-shadow: 0 0 28px rgba(0,183,255,.9);
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+
+@keyframes jackpotPulse {
+  from {
+    transform: scale(1);
+    opacity: .85;
+  }
+  to {
+    transform: scale(1.04);
+    opacity: 1;  }
+  }
+ }
 </style>
 </head>
 
