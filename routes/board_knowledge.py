@@ -1,32 +1,88 @@
-def signal_light(level):
+from pathlib import Path
+
+# -----------------------------
+# SIGNAL LEVEL LOGIC
+# -----------------------------
+def signal_level(score: int):
+    if score >= 3:
+        return "GREEN"
+    elif score == 2:
+        return "ORANGE"
+    return "RED"
+
+
+def signal_light(level: str):
     if level == "GREEN":
         return "🟢"
-    if level == "ORANGE":
+    elif level == "ORANGE":
         return "🟠"
     return "🔴"
 
 
-def analyze_features(name: str):
-    name = name.lower()
+# -----------------------------
+# FEATURE DETECTION (BRAIN)
+# -----------------------------
+def analyze_features(image_path: str):
+    name = str(image_path).lower()
 
+    # Basic detection (you will upgrade this later)
     features = {
-        "gold_fingers": 0,
-        "dense_chips": 0,
-        "connectors": 0,
+        "gold_fingers": 1 if "gold" in name else 0,
+        "dense_chips": 1 if "chip" in name else 0,
+        "industrial_connectors": 1 if "port" in name or "connector" in name else 0,
+        "power_board": 1 if "power" in name else 0,
+        "heavy": 1 if "heavy" in name else 0,
     }
 
-    # 🔍 Simple keyword detection (we’ll upgrade later)
-    if "finger" in name or "gold" in name:
-        features["gold_fingers"] += 3
+    # Convert to signal strength (0–3 scale later)
+    signals = {
+        key: signal_level(value)
+        for key, value in features.items()
+    }
 
-    if "chip" in name or "ic" in name:
-        features["dense_chips"] += 2
+    # Add emoji lights for UI
+    lights = {
+        key: signal_light(value)
+        for key, value in signals.items()
+    }
 
-    if "connector" in name or "port" in name:
-        features["connectors"] += 1
+    # -----------------------------
+    # JACKPOT LOGIC 💥
+    # -----------------------------
+    jackpot = all(value == "GREEN" for value in signals.values())
 
+    # -----------------------------
+    # SCORE SYSTEM
+    # -----------------------------
+    score = sum(features.values())
+
+    if score >= 4:
+        grade = "HIGH"
+        action = "RECOVER"
+    elif score == 3:
+        grade = "MEDIUM"
+        action = "PART OUT"
+    elif score == 2:
+        grade = "LOW"
+        action = "SCRAP"
+    else:
+        grade = "JUNK"
+        action = "DISCARD"
+
+    # -----------------------------
+    # FINAL RESPONSE
+    # -----------------------------
     return {
-        "gold_fingers": signal_level(features["gold_fingers"]),
-        "dense_chips": signal_level(features["dense_chips"]),
-        "connectors": signal_level(features["connectors"]),
+        "features": features,
+        "signals": signals,
+        "lights": lights,
+        "score": score,
+        "grade": grade,
+        "action": action,
+        "jackpot": jackpot,
+        "message": (
+            "💥 JACKPOT — This is a board to recover. Launch Pay_Dirt."
+            if jackpot else
+            "Needs more signals"
+        )
     }
