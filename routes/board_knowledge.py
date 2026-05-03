@@ -1,9 +1,9 @@
-def signal_level(count, high=5, low=1):
-    if count >= high:
-        return "GREEN"
-    elif count >= low:
-        return "ORANGE"
-    return "RED"
+def signal_light(level):
+    if level == "GREEN":
+        return "🟢"
+    if level == "ORANGE":
+        return "🟠"
+    return "🔴"
 
 
 def analyze_features(name: str):
